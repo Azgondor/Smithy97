@@ -57,11 +57,18 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 .pagehead{position:relative;min-height:52px;padding-right:286px}
 .pagehead .vig{position:absolute;right:0;top:0;bottom:0;width:278px;overflow:hidden;background:var(--dark);box-shadow:inset 2px 0 0 rgba(0,0,0,.35)}
 .pagehead .vig svg{display:block;width:100%;height:100%}
-/* tray balloon (event pop-ups) */
-.balloon{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:32;max-width:min(320px,calc(100vw - 16px));
-  background:#ffffe1;color:#000;border:1px solid #000;padding:6px 10px 7px;font:12px/1.35 var(--ui);box-shadow:2px 2px 0 rgba(0,0,0,.35);cursor:pointer}
-.balloon::after{content:"";position:absolute;right:28px;bottom:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#000}
+/* tray balloons (event pop-ups), stacked */
+.balloons{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(46px + env(safe-area-inset-bottom,0px));z-index:32;width:min(320px,calc(100vw - 16px));display:flex;flex-direction:column;gap:6px;align-items:stretch;pointer-events:none}
+.balloon{position:relative;pointer-events:auto;background:#ffffe1;color:#000;border:1px solid #000;padding:6px 10px 7px;font:12px/1.35 var(--ui);box-shadow:2px 2px 0 rgba(0,0,0,.35);cursor:pointer;animation:balin .16s ease-out}
+.balloon:last-child::after{content:"";position:absolute;right:28px;bottom:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#000}
+.balloon.out{opacity:0;transform:translateX(12px);transition:opacity .18s,transform .18s}
+.balloon .bn{float:right;font-weight:bold;color:var(--dim);margin-left:6px}
+.balloon .bgo{display:block;margin-top:3px;color:#000080;text-decoration:underline}
+@keyframes balin{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){.balloon{animation:none}.balloon.out{transition:none}}
 .balloon b{display:block;margin-bottom:2px}
+.balloon.prio{border-width:2px}
+.gtab.new::after{content:"NEW";margin-left:6px;padding:0 4px;font-size:10px;font-weight:bold;color:#fff;background:#c00000;vertical-align:1px}
 .balloon.warn b{color:var(--bad)}
 .status{display:flex;gap:2px}
 .status div{flex:1;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
@@ -685,7 +692,7 @@ button,.stage,select{touch-action:manipulation}
       <fieldset><legend>Current stock</legend><div class="stockgrid sunken" id="stock"></div></fieldset>
       <fieldset><legend>Orders</legend><div class="stack"><div class="qcard" id="sideOrders"></div><span class="note num" id="sideEmpty"></span></div></fieldset>
       <fieldset><legend>Your staff</legend><div class="stack"><div id="staffRows"></div>
-        <span class="note" id="staffEmpty">No staff yet. Hire at the Smith Guild job board. Wages come out of your gold every second; unpaid workers quit after a minute.</span>
+        <span class="note" id="staffEmpty">No staff yet. Hire at the <a href="#" id="toJobs">Smith Guild job board</a>. Wages come out of your gold every second; unpaid workers quit after a minute.</span>
         <span class="num" id="wageTxt"></span></div></fieldset>
       <fieldset id="logBox" hidden><legend>Event log</legend><div class="log well" id="log"></div></fieldset>
     </aside>
@@ -724,7 +731,7 @@ button,.stage,select{touch-action:manipulation}
   </div>
 </div>
 
-<div class="balloon" id="balloon" hidden role="status" aria-live="polite"><b>Smithy 97</b><span class="bt"></span></div>
+<div class="balloons" id="balloons" aria-live="polite"></div>
 
 <div class="modal" id="modal" hidden>
   <div class="win raised" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -944,8 +951,21 @@ function log(msg,warn){const ts=new Date().toTimeString().slice(0,5),pre=BG&&S&&
   if(!QUIET&&!BG&&!(W&&W.showLog))balloon(msg,warn);}
 // small tray balloon for events (replaces the always-on log)
 let balT=null;
-function balloon(msg,warn,title,ms){const b=document.getElementById('balloon');if(!b)return;b.querySelector('b').textContent=title||'Smithy 97';b.querySelector('.bt').textContent=msg;b.classList.toggle('warn',!!warn);b.hidden=false;
-  clearTimeout(balT);balT=setTimeout(()=>{b.hidden=true;},ms||(warn?6500:4000));}
+// stacked tray balloons: newest at the bottom, up to 4 at once; repeats of the same message just count up
+const balMax=()=>innerWidth<760?2:4;
+function balloon(msg,warn,title,ms,prio,go){const box=$('balloons');if(!box)return;
+  const last=box.lastElementChild;
+  if(last&&last.dataset.m===msg&&!last.classList.contains('out')){last.dataset.n=+last.dataset.n+1;last.querySelector('.bn').textContent='\u00d7'+last.dataset.n;clearTimeout(last._t);last._t=setTimeout(()=>balGone(last),ms||(warn?6500:4500));return;}
+  const b=document.createElement('div');b.className='balloon'+(warn?' warn':'')+(prio?' prio':'')+(go?' go':'');b.dataset.m=msg;b.dataset.n=1;b.setAttribute('role','status');
+  b.innerHTML='<b></b><span class="bt"></span><span class="bn"></span>'+(go?'<span class="bgo">Click to go there \u2192</span>':'');
+  b.querySelector('b').textContent=title||'Smithy 97';b.querySelector('.bt').textContent=msg;
+  b.onclick=()=>{if(go)go();balGone(b);};
+  box.appendChild(b);
+  const items=[...box.children].filter(x=>!x.classList.contains('out'));
+  // too many: drop the oldest routine one first, keep unlocks
+  while(items.length>balMax()){const k=items.findIndex(x=>!x.classList.contains('prio'));const v=items.splice(k<0?0:k,1)[0];balGone(v);}
+  b._t=setTimeout(()=>balGone(b),ms||(warn?6500:4500));}
+function balGone(b){if(!b||b.classList.contains('out'))return;clearTimeout(b._t);b.classList.add('out');setTimeout(()=>b.remove(),180);}
 function renderLog(){const el=$('log');el.innerHTML='';S.log.forEach(l=>{const d=document.createElement('div');d.textContent=l.m;if(l.w)d.className='w';el.appendChild(d)});el.scrollTop=el.scrollHeight;}
 function once(key,msg,warn){if(S.seen[key])return;S.seen[key]=1;log(msg,warn);}
 
@@ -1365,10 +1385,12 @@ const REVEAL_MSG={
   jobs:['Smith Guild job board unlocked','Post a job ad at the Smith Guild to hire help. Pick from cheap or skilled applicants.'],
   out:['New: Outskirts','Dig your own ore in the mine. Without a license it’s illegal, so watch for the warden.']
 };
+const REVEAL_GO={front:()=>go('front'),guild:()=>go('guild'),out:()=>go('out'),jobs:()=>{S.gtop='smith';S.gtab='jobs';go('guild');}};
 let revSilent=true;
+document.getElementById('toJobs').onclick=e=>{e.preventDefault();REVEAL_GO.jobs();};
 function updateReveal(){
   W.rev=W.rev||{};const r=W.rev,tw=Object.values(W.towns);let changed=false;
-  const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k])balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],7000);}};
+  const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k])balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],9000,true,REVEAL_GO[k]);}};
   set('front',tw.some(t=>t.made>0||t.earned>0||Object.values(t.stock).some(v=>v>0)));
   set('guild',W.earned>0||tw.some(t=>Object.keys(t.up).length>0));
   set('out',lvl('pick')>0);
@@ -1393,6 +1415,8 @@ function applyReveal(){
   const mineTab=document.querySelector('#gtop .gtab[data-t="mine"]'),jobTab=document.querySelector('#gtabs .gtab[data-g="jobs"]');
   const canMine=lvl('pick')>0,canHire=!!r.jobs;
   show(mineTab,canMine);show(jobTab,canHire);
+  if(canHire&&!r.jobsSeen&&S.page==='guild'&&S.gtop==='smith'&&S.gtab==='jobs')r.jobsSeen=1;
+  if(jobTab)jobTab.classList.toggle('new',canHire&&!r.jobsSeen);if(mineTab)mineTab.classList.toggle('new',false);
   if(!canMine&&S.gtop==='mine')S.gtop='smith';if(!canHire&&S.gtab==='jobs')S.gtab='tree';
   // tech tree: show what you own or can work toward next; hide the rest
   document.querySelectorAll('#tree .tier').forEach(col=>{let any=false;col.querySelectorAll('.node').forEach(d=>{const n=node(d.dataset.id),vis=lvl(n.id)>0||!(n.req||[]).some(x=>!lvl(x));d.hidden=!vis;any=any||vis;});col.hidden=!any;});
@@ -1423,6 +1447,8 @@ function renderGuide(){
     else{setText($('gTitle'),'Getting started');setText($('gStep'),`Step ${i+1} of ${GUIDE.length}`);const h=typeof GUIDE[i].t==='function'?GUIDE[i].t():GUIDE[i].t;if($('gText').dataset.h!==h){$('gText').dataset.h=h;$('gText').innerHTML=h;}$('gDoneRow').hidden=true;
       const st=GUIDE[i],sel=st.pg&&S.page!==st.pg?tab(st.pg):st.el();target=sel?document.querySelector(sel):null;}
   }
+  // after the guide: point the way to the job board until it's been opened once
+  if(!target&&W.rev&&W.rev.jobs&&!W.rev.jobsSeen)target=document.querySelector(S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#gtabs .gtab[data-g="jobs"]');
   if(target!==tutEl){if(tutEl)tutEl.classList.remove('tut');tutEl=target;if(tutEl)tutEl.classList.add('tut');}
 }
 $('gHide').onclick=()=>{W.tutOff=1;renderGuide();balloon('Reopen it any time from Start → Show guide.',false,'Guide hidden');};
@@ -1946,7 +1972,7 @@ function render(){
     map:Object.values(W.towns).some(t=>t!==S&&(t.staff.some(w=>w.unpaid)||t.quests.some(q=>(t.stock[q.k]||0)>=q.qty)))||W.caravans.some(c=>c.left<=0),
     market:Object.keys(ORES).some(o=>oreOpen(o)&&S.op[o]===oreRange(o)[0]&&S.gold>=S.op[o])||(S.made===0&&S.pile.copper===0&&S.furn.every(f=>!f.ore)&&S.ingots.copper===0&&!S.job),
     out:!!S.seen.reopen,
-    guild:Object.values(S.posts).some(p=>p.apps)||S.staff.some(w=>w.unpaid)||T.some(n=>!n.soon&&!nodeMaxed(n)&&nodeOpen(n)&&S.gold>=nodeCost(n)&&(n.once||!lvl(n.id)))
+    guild:!!(W.rev&&W.rev.jobs&&!W.rev.jobsSeen)||Object.values(S.posts).some(p=>p.apps)||S.staff.some(w=>w.unpaid)||T.some(n=>!n.soon&&!nodeMaxed(n)&&nodeOpen(n)&&S.gold>=nodeCost(n)&&(n.once||!lvl(n.id)))
   };
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('alert',!!alerts[b.dataset.p]&&b.dataset.p!==S.page));
   updateReveal();applyReveal();renderGuide();
@@ -2065,8 +2091,7 @@ function boot(){
 document.addEventListener('keydown',e=>{if(BOOTING&&BOOTKEY){e.preventDefault();e.stopImmediatePropagation();BOOTKEY(e);}},true);
 const bootLabel=()=>$('mBoot').innerHTML='🖥&nbsp; Boot screen: '+(W.noBoot?'off':'on');
 const logLabel=()=>{$('mLog').innerHTML='📜&nbsp; Event log: '+(W.showLog?'shown':'hidden');$('logBox').hidden=!W.showLog;if(W.showLog)renderLog();};
-$('mLog').onclick=()=>{W.showLog=!W.showLog;logLabel();if(W.showLog)$('balloon').hidden=true;};
-$('balloon').onclick=()=>{$('balloon').hidden=true;};
+$('mLog').onclick=()=>{W.showLog=!W.showLog;logLabel();if(W.showLog)[...$('balloons').children].forEach(balGone);};
 $('mBoot').onclick=()=>{W.noBoot=!W.noBoot;bootLabel();};
 $('mRestart').onclick=()=>{closeStart();save(false);boot();};
 /* ---------------- music player ---------------- */
