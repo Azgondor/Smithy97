@@ -5,7 +5,7 @@
 <script>
   window.SMITHY_ITCH = true;
   // Paste your GoatCounter code between the quotes, e.g. "smithy97" for smithy97.goatcounter.com
-  window.SMITHY_GOATCOUNTER = "";
+  window.SMITHY_GOATCOUNTER = "azgondro";
 </script>
 </head><body>
 <title>Smithy 97</title>
@@ -68,6 +68,7 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 @media (prefers-reduced-motion:reduce){.balloon{animation:none}.balloon.out{transition:none}}
 .balloon b{display:block;margin-bottom:2px}
 .balloon.prio{border-width:2px}
+.testing{padding:6px 8px;background:#ffffe1;border:1px solid #000}
 .gtab.new::after{content:"NEW";margin-left:6px;padding:0 4px;font-size:10px;font-weight:bold;color:#fff;background:#c00000;vertical-align:1px}
 .balloon.warn b{color:var(--bad)}
 .status{display:flex;gap:2px}
@@ -110,6 +111,7 @@ legend{position:absolute;top:-7px;left:8px;background:var(--face);padding:0 3px}
 
 /* BACK: workshop */
 .work{display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:10px}
+.work.nofurn{grid-template-columns:minmax(0,1fr)}
 @media (max-width:600px){.work{grid-template-columns:minmax(0,1fr)}}
 .scene{position:relative;overflow:hidden;background:linear-gradient(var(--dark),#2a1408 70%,#140a04)}
 .furnace,.stage{height:clamp(240px,42vh,380px)}
@@ -451,8 +453,8 @@ button,.stage,select{touch-action:manipulation}
       <section id="p-back" hidden>
         <div class="stack">
           <div class="pagehead">Back of Smithy <small>furnace &amp; anvil</small></div>
-          <div class="work">
-            <div class="stack">
+          <div class="work" id="workGrid">
+            <div class="stack" id="furnCol">
               <div class="ftabs"><div class="ftlist" id="ftabs" role="tablist"></div><button id="buildF"></button></div>
               <div class="scene sunken furnace" aria-label="Furnace">
                 <div class="heatlbl num" id="heatLbl">COLD 0%</div>
@@ -618,6 +620,7 @@ button,.stage,select{touch-action:manipulation}
       <section id="p-map" hidden>
         <div class="stack">
           <div class="pagehead">Map <small id="mapSub"></small></div>
+          <div class="note testing"><b>Testing:</b> multiple towns are an early experiment and may change or be removed. More coming soon.</div>
           <div class="mapwrap">
             <div class="sunken mapsvg" id="mapSvg"></div>
             <fieldset><legend id="tiLegend">Town</legend><div class="stack" id="townInfo"></div></fieldset>
@@ -769,7 +772,7 @@ const R={
 const PAGES=[
   {id:'back',label:'Back of Smithy',key:'1',icon:'<rect x="2" y="5" width="12" height="9" fill="#7a4e36"/><rect x="6" y="9" width="4" height="5" fill="#ff9a1f"/>'},
   {id:'front',label:'Front of Smithy',key:'2',rev:'front',icon:'<rect x="1" y="7" width="14" height="7" fill="#8a5a34"/><path d="M1 7l2-5h10l2 5z" fill="#c62828"/>'},
-  {id:'market',label:'Market',key:'3',icon:'<rect x="3" y="8" width="5" height="4" fill="#c8743a" stroke="#000"/><rect x="8" y="9" width="5" height="4" fill="#7d7a78" stroke="#000"/>'},
+  {id:'market',label:'Market',key:'3',rev:'market',icon:'<rect x="3" y="8" width="5" height="4" fill="#c8743a" stroke="#000"/><rect x="8" y="9" width="5" height="4" fill="#7d7a78" stroke="#000"/>'},
   {id:'out',label:'Outskirts',key:'4',req:'pick',icon:'<path d="M1 14l5-8 3 4 2-2 4 6z" fill="#6e7d5a"/><rect x="6" y="10" width="4" height="4" fill="#2a1d14"/>'},
   {id:'guild',label:'Guilds',key:'5',rev:'guild',icon:'<path d="M8 1l6 3v4c0 4-3 6-6 7-3-1-6-3-6-7V4z" fill="#000080"/><path d="M5 8l2 2 4-4" stroke="#ffd23f" stroke-width="2" fill="none"/>'},
   {id:'mail',label:'Inbox',key:'6',req:'email',icon:'<rect x="1" y="3" width="14" height="10" fill="#ffffe0" stroke="#000"/><path d="M1 3l7 6 7-6" fill="none" stroke="#000"/>'},
@@ -778,10 +781,10 @@ const PAGES=[
 ];
 const T=[
   // Smith Guild tech tree (no g)
-  {id:'pick',tier:1,name:'Pickaxe',cost:15,once:1,desc:()=>'Dig copper in the Outskirts. Without a license it\'s illegal: if the warden catches you, you pay a fine and the mines close for a while.'},
+  {id:'pick',tier:1,name:'Pickaxe',cost:15,once:1,desc:()=>'Opens the Job Board so you can hire a stoker. Dig copper in the Outskirts. Without a license it\'s illegal: if the warden catches you, you pay a fine and the mines close for a while.'},
   {id:'pot',tier:1,name:'Copper Pot Pattern',cost:30,once:1,desc:()=>'Forge copper pots: 2 copper ingots, sells around 14 g. Lets you hire apprentices.'},
   {id:'hammer',tier:1,name:'Heavier Hammer',cost:20,mult:1.7,req:['pick'],desc:l=>`+1 strike per blow (now ${1+l}).`},
-  {id:'bellows',tier:1,name:'Bigger Bellows',cost:30,mult:1.8,max:5,desc:l=>`Each pump adds more heat (now +${pumpAmt(l)}%). Lets you hire a stoker.`},
+  {id:'bellows',tier:1,name:'Bigger Bellows',cost:30,mult:1.8,max:5,desc:l=>`Each pump adds more heat (now +${pumpAmt(l)}%).`},
   {id:'lining',tier:2,name:'Firebrick Lining',cost:50,mult:1.6,req:['bellows'],desc:l=>`Smelts 40% faster, holds +5 ore, cools slower (Lv ${l}).`},
   {id:'iron',tier:2,name:'Iron Smelting',cost:90,once:1,req:['bellows'],desc:()=>'Iron ore appears at the Market. Needs a HOT furnace (60%). Unlocks iron horseshoes.'},
   {id:'charter',tier:2,name:'Miners Guild Charter',cost:50,once:1,req:['pick'],desc:()=>'Join the Miners Guild. Licenses, better pickaxes and mine upgrades are sold in its hall.'},
@@ -797,9 +800,9 @@ const T=[
   {id:'sign',g:'merch',name:'Painted Shop Sign',cost:60,mult:2,max:3,req:['pot'],desc:l=>`+10% on everything sold in your shop (now +${l*10}%). Lets you hire a shopkeeper.`},
   {id:'ads',g:'merch',name:'Print Shop Contacts',cost:40,once:1,req:['pot'],desc:()=>'Run newspaper ads from your shop: an extra counter spot and customers arrive faster for 3 minutes.'},
   {id:'ledger',g:'merch',name:'Trade Ledger',cost:80,mult:1.9,max:3,rk:['merch',1],desc:l=>`Bram gives guild members a discount: 8% off ore per level (now ${l*8}% off).`},
-  {id:'map_barony',g:'merch',map:1,name:'Map of the Barony of Varrow',cost:1500,once:1,rk:['merch',3],desc:()=>'Reveals Hollowford and Millbrook. Found new smithies there and send caravans between your towns.'},
-  {id:'map_duchy',g:'merch',map:1,name:'Map of the Duchy of Fernmoor',cost:6000,once:1,req:['map_barony'],rk:['merch',4],desc:()=>'Reveals Fernmoor and Ashgate, further down the river roads.'},
-  {id:'map_kingdom',g:'merch',map:1,name:'Map of the Kingdom of Valemont',cost:25000,once:1,req:['map_duchy'],rk:['merch',5],desc:()=>'Reveals the royal port of Brightwater and the capital, Kingsreach.'},
+  {id:'map_barony',g:'merch',map:1,name:'Map of the Barony of Varrow (testing)',cost:20000,once:1,req:['seal','clerk','longsword'],rk:['merch',6],desc:()=>'TESTING: the endgame. Reveals Hollowford and Millbrook, where you can found new smithies and send caravans between towns. This part is an early experiment and may change or be removed. More coming soon.'},
+  {id:'map_duchy',g:'merch',map:1,soon:1,name:'Map of the Duchy of Fernmoor',cost:6000,once:1,req:['map_barony'],rk:['merch',4],desc:()=>'Reveals Fernmoor and Ashgate, further down the river roads.'},
+  {id:'map_kingdom',g:'merch',map:1,soon:1,name:'Map of the Kingdom of Valemont',cost:25000,once:1,req:['map_duchy'],rk:['merch',5],desc:()=>'Reveals the royal port of Brightwater and the capital, Kingsreach.'},
   {id:'map_wayfarer',g:'merch',map:1,name:"Wayfarer's Map",cost:100000,once:1,req:['map_kingdom'],rk:['merch',6],desc:()=>'Charts the Azure Sea. Reveals Port Sable on another continent: a fresh start where no one knows you, and ships take a long time.'},
   {id:'crier',g:'merch',name:'Hire Town Crier',cost:180,mult:1.8,max:3,req:['ads'],rk:['merch',2],desc:l=>`Shouts your name in the square: +1 counter spot for good (now ${1+l}).`},
   // Miners Guild (bought per town)
@@ -848,7 +851,7 @@ const GUILDS={
     perk:r=>`+${r*5}% digging & mining speed`,how:'Earn XP by digging ore yourself and from your miners\' hauls.'}
 };
 const ROLES={
-  stoker:{name:'Stoker',max:1,req:'bellows',reqName:'Bigger Bellows',base:3,blurb:'Works the bellows so the furnace stays hot while you are away.',does:s=>`keeps furnace at ${stokerHeat(s)}%`},
+  stoker:{name:'Stoker',max:1,req:'pick',reqName:'Pickaxe',base:3,blurb:'Works the bellows so the furnace stays hot while you are away.',does:s=>`keeps furnace at ${stokerHeat(s)}%`},
   apprentice:{name:'Apprentice',max:4,req:'pot',reqName:'Copper Pot Pattern',base:5,blurb:'Strikes the anvil when you are not there.',does:s=>`${(.3*s).toFixed(1)} strikes/s`},
   miner:{name:'Miner',max:5,req:'dig',reqName:'Prospecting License (Miners Guild)',base:4,blurb:'Digs ore in the Outskirts and hauls it to your pile.',does:s=>`${(.12*s).toFixed(2)} ore/s`},
   keeper:{name:'Shopkeeper',max:1,req:'sign',reqName:'Painted Shop Sign (Merchants Guild)',base:8,blurb:'Sells spare stock while you work. Holds back what orders need.',does:s=>`sells at ${keeperPct(s)}%`}
@@ -896,7 +899,7 @@ const fmtDur=s=>{s=Math.floor(s||0);const h=Math.floor(s/3600),m=Math.floor(s%36
 const TIME_MARKS=[[60,'01min'],[300,'05min'],[900,'15min'],[1800,'30min'],[3600,'1h'],[7200,'2h'],[14400,'4h'],[36000,'10h']];
 let W=null,S=null,BG=false;
 function bindTown(tw){SHARED.forEach(k=>{delete tw[k];Object.defineProperty(tw,k,{get:()=>W[k],set:v=>{W[k]=v;},enumerable:false,configurable:true});});return tw;}
-function freshWorld(){const t=fresh();W={cur:'oakridge',towns:{},maps:{},caravans:[],mapSel:'oakridge'};SHARED.forEach(k=>{if(k in t)W[k]=t[k];});W.v=6;W.towns.oakridge=bindTown(t);return W;}
+function freshWorld(){const t=fresh();W={cur:'oakridge',towns:{},maps:{},caravans:[],mapSel:'oakridge'};SHARED.forEach(k=>{if(k in t)W[k]=t[k];});W.v=6;W.towns.oakridge=bindTown(t);W.gold=0;W.towns.oakridge.ingots.copper=6;return W;}
 function newTown(id){
   const t=fresh(),towns=Object.values(W.towns),same=x=>TOWNS[x.town].cont===TOWNS[id].cont;
   t.town=id;bindTown(t);
@@ -924,7 +927,7 @@ const oreOpen=o=>!ORES[o].tech||lvl(ORES[o].tech)>0;
 const strikePow=()=>1+lvl('hammer');
 function pumpAmt(l){return 12+5*(l===undefined?lvl('bellows'):l);}
 const fCap=()=>10+5*lvl('lining');
-const decay=()=>3.2*Math.pow(.85,lvl('lining'));
+const decay=()=>1.4*Math.pow(.85,lvl('lining'));   // gentle: one burst of pumping smelts a load
 const F=()=>S.furn[Math.min(S.fsel||0,S.furn.length-1)];
 const FURN_COST=[0,300,900,2500],FURN_MAX=4;
 const needHeat=()=>ORES[F().type||F().set].heat;
@@ -1380,27 +1383,30 @@ function renderMap(){
 const avail=p=>(!p.req||lvl(p.req)>0)&&(!p.rev||!!(W.rev&&W.rev[p.rev]));
 /* ---------------- gradual reveal: pages and panels appear as they become useful ---------------- */
 const REVEAL_MSG={
+  market:['New: Market','Scrap is running low. Buy copper ore from Bram, then smelt it in your furnace.'],
   front:['New: Front of Smithy','Your shop. Sell what you forge and fill customers’ orders here.'],
   guild:['New: Guilds','Spend gold on upgrades and new patterns at the Smith Guild.'],
   jobs:['Smith Guild job board unlocked','Post a job ad at the Smith Guild to hire help. Pick from cheap or skilled applicants.'],
   out:['New: Outskirts','Dig your own ore in the mine. Without a license it’s illegal, so watch for the warden.']
 };
-const REVEAL_GO={front:()=>go('front'),guild:()=>go('guild'),out:()=>go('out'),jobs:()=>{S.gtop='smith';S.gtab='jobs';go('guild');}};
+const REVEAL_GO={market:()=>go('market'),front:()=>go('front'),guild:()=>go('guild'),out:()=>go('out'),jobs:()=>{S.gtop='smith';S.gtab='jobs';go('guild');}};
 let revSilent=true;
 document.getElementById('toJobs').onclick=e=>{e.preventDefault();REVEAL_GO.jobs();};
 function updateReveal(){
   W.rev=W.rev||{};const r=W.rev,tw=Object.values(W.towns);let changed=false;
   const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k])balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],9000,true,REVEAL_GO[k]);}};
   set('front',tw.some(t=>t.made>0||t.earned>0||Object.values(t.stock).some(v=>v>0)));
+  set('market',tw.some(t=>t.made>=4||t.pile.copper>0||t.pile.iron>0||t.furn.some(f=>f.ore>0)||Object.keys(t.up).length>0));
   set('guild',W.earned>0||tw.some(t=>Object.keys(t.up).length>0));
   set('out',lvl('pick')>0);
-  set('jobs',S.staff.length>0||lvl('bellows')>0||lvl('pot')>0||lvl('dig')>0||lvl('sign')>0);
+  set('jobs',S.staff.length>0||lvl('pick')>0||lvl('bellows')>0||lvl('pot')>0||lvl('dig')>0||lvl('sign')>0);
   if(changed)buildTabs();
   revSilent=false;
 }
 function applyReveal(){
   const r=W.rev||{},iron=oreOpen('iron'),show=(el,c)=>{if(el)el.hidden=!c;};
   const fs=id=>{const e=$(id);return e?e.closest('fieldset'):null;};
+  show($('furnCol'),!!r.market);$('workGrid').classList.toggle('nofurn',!r.market);
   show(fs('sideOrders'),!!r.front);
   show(fs('staffRows'),S.staff.length>0||lvl('bellows')>0||lvl('pot')>0);
   show(document.querySelector('.ftabs'),iron||S.furn.length>1);
@@ -1425,25 +1431,29 @@ function applyReveal(){
 /* ---------------- guide (tutorial) ---------------- */
 const tab=p=>`#tabs button[data-p="${p}"]`;
 const anyIngot=()=>S.ingots.copper>0||S.ingots.iron>0;
+const stokerAd=()=>S.posts.stoker&&S.posts.stoker.apps?'#jobs [data-role="stoker"] .cands button':'#jobs [data-role="stoker"] button[data-act="post"]';
+const toJobs=()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':S.gtab!=='jobs'?'#gtabs .gtab[data-g="jobs"]':stokerAd();
 const GUIDE=[
-  {t:'Click the <b>Market</b> tab at the bottom of the screen.',done:()=>S.page==='market'||S.pile.copper>0||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,el:()=>tab('market')},
-  {t:'Buy <b>5 copper ore</b>. It costs your starting gold.',done:()=>S.pile.copper>0||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,pg:'market',el:()=>'#oreRows tr[data-o="copper"] button[data-n="5"]'},
-  {t:'Go to <b>Back of Smithy</b>, your workshop.',done:()=>S.page==='back'||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,el:()=>tab('back')},
-  {t:'Click <b>Put in copper ore</b> to load the furnace.',done:()=>S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,pg:'back',el:()=>'#loadBtn'},
-  {t:'Click <b>Pump bellows</b> until the heat bar passes the black line. Ingots appear once it’s hot.',done:()=>S.furn.some(f=>f.type&&f.heat>=ORES[f.type].heat)||anyIngot()||S.made>0,pg:'back',el:()=>'#bellowsBtn'},
-  {t:'When an ingot is ready, <b>click the anvil</b> again and again to hammer out Copper Nails.',done:()=>S.made>0,pg:'back',el:()=>anyIngot()||S.job?'#stage':'#bellowsBtn'},
-  {t:'Go to <b>Front of Smithy</b>, your shop.',done:()=>S.page==='front'||S.earned>0,el:()=>tab('front')},
-  {t:'Click <b>Deliver</b> for a customer, or <b>Sell</b> your nails. Keep forging if you need more.',done:()=>S.earned>0,pg:'front',el:()=>{const d=document.querySelector('#walkins .dl:not(:disabled)');return d?'#walkins .dl:not(:disabled)':'#sellRows tr[data-k="nails"] button[data-s="1"]';}},
-  {t:()=>S.gold<15?'Earn <b>15 g</b> by forging and selling, then learn the <b>Pickaxe</b> at the Guilds. It lets you dig copper for free in the Outskirts.':'Open the <b>Guilds</b> and learn the <b>Pickaxe</b> (15 g). Keep the rest for ore. The Pickaxe lets you dig copper for free in the Outskirts.',done:()=>!!(W.funnel&&W.funnel['step/10-first-upgrade'])||Object.keys(S.up).length>0,el:()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#tree .node[data-id="pick"] button'}
+  {t:'Click the <b>anvil</b> again and again to hammer a scrap copper bar into Copper Nails.',done:()=>S.made>0||S.earned>0,pg:'back',el:()=>'#stage'},
+  {t:'Go to <b>Front of Smithy</b>, your shop.',done:()=>{if(S.page==='front')S.seen.shop=1;return !!S.seen.shop||S.earned>0;},el:()=>tab('front')},
+  {t:'Click <b>Deliver</b> for a customer, or <b>Sell</b> your nails. Forge more if you need them.',done:()=>S.earned>0,pg:'front',el:()=>{const d=document.querySelector('#walkins .dl:not(:disabled)');return d?'#walkins .dl:not(:disabled)':(S.stock.nails>0?'#sellRows tr[data-k="nails"] button[data-s="1"]':tab('back'));}},
+  {t:'Keep hammering your scrap into nails and selling them. When the scrap runs low, the <b>Market</b> opens.',done:()=>!!(W.rev&&W.rev.market),pg:'back',el:()=>anyIngot()||S.job?'#stage':tab('front')},
+  {t:'Go to the <b>Market</b> and buy <b>copper ore</b>.',done:()=>!!S.seen.bought||!!S.seen.ingot,pg:'market',el:()=>'#oreRows tr[data-o="copper"] button[data-n="5"]'},
+  {t:'Back at the smithy, click <b>Put in copper ore</b> to load the furnace.',done:()=>S.furn.some(f=>f.ore>0)||!!S.seen.ingot,pg:'back',el:()=>'#loadBtn'},
+  {t:'Click <b>Pump bellows</b> until the heat passes the black line. The ore turns into bars you can hammer.',done:()=>!!S.seen.ingot,pg:'back',el:()=>'#bellowsBtn'},
+  {t:()=>S.gold<15?'Forge and sell until you have <b>15 g</b>, then learn the <b>Pickaxe</b> at the Guilds.':'Open the <b>Guilds</b> and learn the <b>Pickaxe</b> (15 g). It opens the Job Board and lets you dig copper for free.',done:()=>lvl('pick')>0,el:()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#tree .node[data-id="pick"] button'},
+  {t:()=>{const p=S.posts.stoker;if(p&&p.apps){const f=Math.min(...p.apps.map(a=>a.fee));return S.gold<f?`Applicants are in! Earn <b>${f} g</b> to pay a hiring fee, then <b>Hire</b> one.`:'Applicants are in! <b>Hire</b> one. Cheap ones are fine to start.';}
+     if(p)return 'Ad posted. Applicants answer in under a minute. Keep forging and selling meanwhile.';
+     return (S.gold<POST_COST?'Forge and sell until you have <b>10 g</b>, then hire':'Hire')+' a <b>stoker</b> at the Job Board: post an ad (10 g), then pick an applicant. A stoker keeps the furnace hot for you.';},done:()=>staffOf('stoker').length>0,el:()=>S.posts.stoker&&!S.posts.stoker.apps?null:toJobs()}
 ];
 let tutEl=null;
 function renderGuide(){
   const g=$('guide');let target=null;
   if(W.tutOff||W.tutDone){g.hidden=true;}
   else{
-    const i=GUIDE.findIndex(s=>!s.done());g.hidden=false;
+    let last=-1;GUIDE.forEach((s,k)=>{if(s.done())last=k;});const i=GUIDE.findIndex((s,k)=>k>last&&!s.done());g.hidden=false;
     if(i<0){setText($('gTitle'),'You’ve got the basics!');setText($('gStep'),'');
-      $('gText').innerHTML='That’s the loop: <b>buy ore → smelt → forge → sell → upgrade</b>. New tabs and features appear as you unlock them. Reopen this guide from <b>Start → Show guide</b>.';$('gDoneRow').hidden=false;}
+      $('gText').innerHTML='Your stoker keeps the fire going now. The loop: <b>buy ore → smelt → forge → sell → upgrade &amp; hire</b>. New tabs and features appear as you unlock them. Reopen this guide from <b>Start → Show guide</b>.';$('gDoneRow').hidden=false;}
     else{setText($('gTitle'),'Getting started');setText($('gStep'),`Step ${i+1} of ${GUIDE.length}`);const h=typeof GUIDE[i].t==='function'?GUIDE[i].t():GUIDE[i].t;if($('gText').dataset.h!==h){$('gText').dataset.h=h;$('gText').innerHTML=h;}$('gDoneRow').hidden=true;
       const st=GUIDE[i],sel=st.pg&&S.page!==st.pg?tab(st.pg):st.el();target=sel?document.querySelector(sel):null;}
   }
@@ -1797,7 +1807,8 @@ function render(){
   const sr=smeltRate(),srAll=S.furn.reduce((a,f)=>a+smeltRateOf(f),0);
   const info=[['Copper ingots',fmt(S.ingots.copper)],['Iron ingots',fmt(S.ingots.iron)],['Per blow',strikePow()*(S.flow>0?2:1)+(S.flow>0?' (flow)':'')],['Smelting',S.furn.length>1?(srAll?srAll.toFixed(2)+'/s total':'idle'):ft?(sr?sr.toFixed(2)+'/s':'too cold'):'empty'],
     ['Next ingot',sr&&fu.ore>=1?Math.ceil((1-fu.acc)/sr)+'s':'—'],['Apprentices',apprRate()?apprRate().toFixed(1)+'/s':'none']];
-  $('info').innerHTML=info.map(([a,b])=>`<div><span>${a}</span><span>${b}</span></div>`).join('');
+  const rv=W.rev||{},keep=([a])=>a==='Iron ingots'?oreOpen('iron'):a==='Smelting'||a==='Next ingot'?!!rv.market:a==='Apprentices'?lvl('pot')>0||staffOf('apprentice').length>0:true;
+  $('info').innerHTML=info.filter(keep).map(([a,b])=>`<div><span>${a}</span><span>${b}</span></div>`).join('');
 
   // shop
   const sh=$('shelf');const shown=Object.keys(R).reduce((a,k)=>a+Math.min(S.stock[k]||0,4),0);
@@ -1994,7 +2005,7 @@ function dialog(title,html,icon,acts){
 const soundLabel=()=>$('mSound').innerHTML=(S.sound?'🔊':'🔇')+'&nbsp; Sound: '+(S.sound?'on':'off');
 $('mSave').onclick=()=>{closeStart();save(true)};
 $('mSound').onclick=()=>{S.sound=!S.sound;soundLabel()};
-$('mAbout').onclick=()=>{closeStart();dialog('How to play',`<b>Smithy 97</b> v0.5<br>1. <b>Market</b>: buy copper ore.<br>2. <b>Back of Smithy</b>: put ore in the furnace, pump the bellows past the marker, then strike the anvil.<br>3. <b>Front of Smithy</b>: your shop. Sell goods, serve customers, ship email contracts and run newspaper ads.<br>4. <b>Guilds</b>: the Smith Guild (tech tree, job board), the Merchants Guild (shop promotion, trade discounts) and the Miners Guild (licenses and this town's mine). Each has its own rank from G to SSS.<br>5. <b>Outskirts</b>: dig ore (illegally, until you have a license).<br><br>Music: “Shop” by xDeviruchi (♪ button in the taskbar).<br><br>Keys: 1–8 change page, B pumps, Space strikes. Blinking tabs need you.`,ICON_INFO,[['OK']])};
+$('mAbout').onclick=()=>{closeStart();dialog('How to play',`<b>Smithy 97</b> v0.5<br>1. <b>Back of Smithy</b>: click the anvil to hammer bars into goods. Out of bars? Buy ore at the <b>Market</b>, put it in the furnace and pump the bellows past the marker. Hire a stoker to keep the fire going.<br>2. <b>Market</b>: buy ore, and later sell spare ore and bars.<br>3. <b>Front of Smithy</b>: your shop. Sell goods, serve customers, ship email contracts and run newspaper ads.<br>4. <b>Guilds</b>: the Smith Guild (tech tree, job board), the Merchants Guild (shop promotion, trade discounts) and the Miners Guild (licenses and this town's mine). Each has its own rank from G to SSS.<br>5. <b>Outskirts</b>: dig ore (illegally, until you have a license).<br><br>Music: “Shop” by xDeviruchi (♪ button in the taskbar).<br><br>Keys: 1–8 change page, B pumps, Space strikes. Blinking tabs need you.`,ICON_INFO,[['OK']])};
 $('mReset').onclick=()=>{closeStart();dialog('Format C:',`All gold, stock and guild knowledge will be erased. This cannot be undone.<br><br>Format drive C: and start over?`,ICON_WARN,[['No'],['Yes, format',()=>{freshWorld();S=W.towns.oakridge;try{localStorage.removeItem(KEY)}catch(e){}buildTabs();buildSelects();intro();go('back')}]])};
 
 /* ---------------- save / load ---------------- */
@@ -2046,7 +2057,7 @@ function migrateTown(obj,id){
   if((S.up['dig@oakridge']||S.up['ironpick@oakridge'])&&!S.up.charter){S.up.charter=1;S.up.pick=S.up.pick||1;}
   return S;
 }
-function intro(){S.log=[];log('Smithy 97 booted. You have 10 g and a cold, empty forge.');log('Go to the Market (bottom bar) and buy copper ore.',true);}
+function intro(){S.log=[];log('The old smith left you a crate of 6 scrap copper bars. Hammer them into nails on the anvil.');}
 
 /* ---------------- boot sequence ---------------- */
 let BOOTING=false,BOOTKEY=null;
@@ -2191,7 +2202,7 @@ function start(data){
     if(gap>18*3600*1000)track('return/next-day','Came back another day');}
   buildTabs();buildSelects();buildSell();buildTree();buildJobs();buildOffice();
   if(!had)intro();else renderLog();
-  soundLabel();bootLabel();logLabel();if(!W.tutDone&&GUIDE.every(s=>s.done()))W.tutDone=1;go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
+  soundLabel();bootLabel();logLabel();if(!W.tutDone&&(GUIDE[GUIDE.length-1].done()||W.earned>500))W.tutDone=1;go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
   renderPlayer();
   if(!(data&&data.state)&&!W.noBoot)boot();else track('step/03-in-game','Reached the game');
 }
