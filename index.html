@@ -2,6 +2,11 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>
+  window.SMITHY_ITCH = true;
+  // Paste your GoatCounter code between the quotes, e.g. "smithy97" for smithy97.goatcounter.com
+  window.SMITHY_GOATCOUNTER = "";
+</script>
 </head><body>
 <title>Smithy 97</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -38,11 +43,28 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 .bar svg{width:16px;height:16px;flex:none}
 .bar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb{width:16px;height:14px;padding:0;min-height:0;display:grid;place-items:center;font:bold 9px/1 var(--ui);color:var(--ink)}
-.menu{display:flex;gap:2px;padding:2px 6px;flex:none}
-.menu span{padding:1px 6px}
+/* guide (tutorial) */
+.guide{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:#ffffe1;border:1px solid #000;box-shadow:2px 2px 0 rgba(0,0,0,.3)}
+.guide>svg{width:28px;height:28px;flex:none}
+.guide .gbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.guide .gh{display:flex;gap:8px;align-items:baseline}
+.guide #gText{font-size:13px}
+.guide .tb{flex:none}
+.tut{outline:3px solid #ffd23f!important;outline-offset:2px;box-shadow:0 0 0 6px rgba(255,210,63,.45)!important;animation:tutp 1s ease-in-out infinite;position:relative;z-index:2}
+@keyframes tutp{50%{outline-color:#ff9a1f}}
+@media (prefers-reduced-motion:reduce){.tut{animation:none}}
+/* page header vignette: the location scene, small, at the right of each page title */
+.pagehead{position:relative;min-height:52px;padding-right:286px}
+.pagehead .vig{position:absolute;right:0;top:0;bottom:0;width:278px;overflow:hidden;background:var(--dark);box-shadow:inset 2px 0 0 rgba(0,0,0,.35)}
+.pagehead .vig svg{display:block;width:100%;height:100%}
+/* tray balloon (event pop-ups) */
+.balloon{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:32;max-width:min(320px,calc(100vw - 16px));
+  background:#ffffe1;color:#000;border:1px solid #000;padding:6px 10px 7px;font:12px/1.35 var(--ui);box-shadow:2px 2px 0 rgba(0,0,0,.35);cursor:pointer}
+.balloon::after{content:"";position:absolute;right:28px;bottom:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#000}
+.balloon b{display:block;margin-bottom:2px}
+.balloon.warn b{color:var(--bad)}
 .status{display:flex;gap:2px}
 .status div{flex:1;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.foot{padding:3px 0 0;flex:none}
 
 .inner{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:10px;align-items:start;padding:8px 6px}
 @media (max-width:700px){.inner{grid-template-columns:minmax(0,1fr)}}
@@ -51,7 +73,6 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 
 .pagehead{display:flex;align-items:center;gap:8px;padding:6px 8px;color:var(--hi);background:var(--shade);font-weight:bold;flex-wrap:wrap}
 .pagehead small{font-weight:normal;opacity:.9}
-.pagehead .you{margin-left:auto;font-weight:normal;font-size:11px;background:var(--sel);padding:1px 6px}
 
 button,select{font:12px var(--ui);color:var(--ink)}
 button{background:var(--face);border:0;padding:4px 10px;min-height:23px;cursor:pointer;
@@ -242,7 +263,7 @@ tr.locked td{color:var(--shade)}
 .plseek:focus-visible{outline:1px dotted var(--ink)}
 .plctl button{min-width:34px;padding:3px 6px;font-weight:bold}
 .plctl #plRep[aria-pressed="true"]{box-shadow:inset -1px -1px var(--hi),inset 1px 1px var(--dark),inset -2px -2px var(--lite),inset 2px 2px var(--shade);background:var(--lite)}
-#plVol{accent-color:var(--title1);min-width:60px}
+#plVol{accent-color:var(--title1);min-width:60px;height:24px;touch-action:none}
 .pllist{margin:0;padding:3px 0;list-style:none;max-height:96px;overflow:auto}
 .pllist li{padding:3px 8px;cursor:pointer;display:flex;gap:6px}
 .pllist li .ar{margin-left:auto;color:var(--dim);font-size:11px}
@@ -276,6 +297,7 @@ tr.locked td{color:var(--shade)}
 .spl-copy{position:absolute;left:16px;bottom:22px;font-size:11px;opacity:.8}
 .spl-strip{position:absolute;left:0;right:0;bottom:0;height:10px;background:linear-gradient(90deg,#000080,#1084d0,#ffffff,#1084d0,#000080) 0 0/50% 100%;animation:splstrip 1.4s linear infinite}
 @keyframes splstrip{to{background-position:100% 0}}
+#bootSnd{position:absolute;right:max(14px,env(safe-area-inset-right,0px));top:max(14px,env(safe-area-inset-top,0px));z-index:2;font:18px var(--mono);color:#ffd23f;animation:bootblink 1.4s steps(1) infinite}
 #bootSkip{position:absolute;right:max(14px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:2}
 @media (prefers-reduced-motion:reduce){.spl-strip,#bootPower .hint,#bootScr .cur::after{animation:none}}
 /* office */
@@ -344,7 +366,7 @@ tr.locked td{color:var(--shade)}
 button,.stage,select{touch-action:manipulation}
 /* phones and short screens: normal scrolling layout, no Location picture, compact scenes, icon-only taskbar */
 @media (max-width:759px),(max-height:559px){
-  .locwin{display:none}
+  .pagehead{min-height:0;padding-right:8px}.pagehead .vig{display:none}
   .furnace{height:170px}
   .stage{height:210px}
   .banner{height:84px}
@@ -400,22 +422,28 @@ button,.stage,select{touch-action:manipulation}
     <div class="spl-copy">© 1997 Smithy Systems Inc. All rights reserved.</div>
     <div class="spl-strip"></div>
   </div>
+  <div id="bootSnd" hidden>🔊 Click anywhere for sound</div>
   <button id="bootSkip">Skip ▸</button>
 </div>
 
 <div id="fitbox"><div id="fit">
 <div class="app raised">
   <div class="bar"><svg viewBox="0 0 16 16"><path d="M2 6h10l2-2v3l-3 2v2h2v2H4v-2h2V9L2 8z" fill="#c0c0c0"/></svg><span id="titleTxt">Smithy 97</span><b id="barGold" class="num"></b>
-    <button class="tb" aria-hidden="true" tabindex="-1">_</button><button class="tb" aria-hidden="true" tabindex="-1">□</button><button class="tb" aria-hidden="true" tabindex="-1">×</button></div>
-  <div class="menu"><span><u>F</u>ile</span><span><u>V</u>iew</span><span><u>G</u>o</span><span><u>H</u>elp</span></div>
+</div>
 
   <div class="inner">
     <div class="page">
+      <div id="guide" class="guide" hidden role="region" aria-label="Guide">
+        <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path d="M5 1h6v1h1v1h1v5h-1v1h-1v2H5V9H4V8H3V3h1V2h1z" fill="#ffd23f"/><path d="M5 12h6v1H5zM6 14h4v1H6z" fill="#808080"/><path d="M6 3h2v1H6zM5 4h1v2H5z" fill="#fff"/></svg>
+        <div class="gbody"><div class="gh"><b id="gTitle">Getting started</b><span class="num note" id="gStep"></span></div><div id="gText"></div>
+          <div class="row" id="gDoneRow" hidden><button id="gOk">Got it</button></div></div>
+        <button class="tb" id="gHide" aria-label="Hide guide" title="Hide guide">×</button>
+      </div>
 
       <!-- BACK OF SMITHY: workshop -->
       <section id="p-back" hidden>
         <div class="stack">
-          <div class="pagehead">Back of Smithy <small>furnace &amp; anvil</small><span class="you">You are here</span></div>
+          <div class="pagehead">Back of Smithy <small>furnace &amp; anvil</small></div>
           <div class="work">
             <div class="stack">
               <div class="ftabs"><div class="ftlist" id="ftabs" role="tablist"></div><button id="buildF"></button></div>
@@ -470,7 +498,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- FRONT OF SMITHY: shop -->
       <section id="p-front" hidden>
         <div class="stack">
-          <div class="pagehead">Front of Smithy <small>your shop</small><span class="you">You are here</span></div>
+          <div class="pagehead">Front of Smithy <small>your shop</small></div>
           <div class="banner sunken" style="background:linear-gradient(#6b4a2e,#3e2a1a)">
             <svg viewBox="0 0 600 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
               <rect x="0" y="0" width="600" height="120" fill="#5a3d26"/>
@@ -504,7 +532,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- MARKET: ore -->
       <section id="p-market" hidden>
         <div class="stack">
-          <div class="pagehead">Market <small>ore traders</small><span class="rchip num" id="merchChip"></span><span class="you">You are here</span></div>
+          <div class="pagehead">Market <small>ore traders</small><span class="rchip num" id="merchChip"></span></div>
           <div class="banner sunken" style="background:linear-gradient(#5aa0d8,#bfe0f5)">
             <svg viewBox="0 0 600 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
               <path d="M0 120h600V100H0z" fill="#a08460"/>
@@ -534,7 +562,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- OUTSKIRTS -->
       <section id="p-out" hidden>
         <div class="stack">
-          <div class="pagehead">Outskirts <small id="outSub">hills &amp; mine shaft</small><span class="rchip num" id="mineChip"></span><span class="you">You are here</span></div>
+          <div class="pagehead">Outskirts <small id="outSub">hills &amp; mine shaft</small><span class="rchip num" id="mineChip"></span></div>
           <div class="banner sunken" style="background:linear-gradient(#7fa7c4,#c9d9c0)">
             <svg viewBox="0 0 600 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
               <path d="M0 120V76l90-40 80 30 90-36 120 44 90-30 130 40v36z" fill="#6e7d5a"/>
@@ -562,7 +590,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- INBOX -->
       <section id="p-mail" hidden>
         <div class="stack">
-          <div class="pagehead">Inbox <small>smith@smithy97.net</small><span class="you">You are here</span></div>
+          <div class="pagehead">Inbox <small>smith@smithy97.net</small></div>
           <fieldset><legend>Correspondence</legend>
             <div class="stack">
               <div class="lcd num"><span id="repTxt"></span><small id="repNext"></small></div>
@@ -582,7 +610,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- MAP -->
       <section id="p-map" hidden>
         <div class="stack">
-          <div class="pagehead">Map <small id="mapSub"></small><span class="you">You are here</span></div>
+          <div class="pagehead">Map <small id="mapSub"></small></div>
           <div class="mapwrap">
             <div class="sunken mapsvg" id="mapSvg"></div>
             <fieldset><legend id="tiLegend">Town</legend><div class="stack" id="townInfo"></div></fieldset>
@@ -602,7 +630,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- OFFICE -->
       <section id="p-office" hidden>
         <div class="stack">
-          <div class="pagehead">Office <small>workshop manager</small><span class="you">You are here</span></div>
+          <div class="pagehead">Office <small>workshop manager</small></div>
           <div class="lcd num"><span id="mgrLcd"></span></div>
           <label class="row" for="mgrAuto"><input type="checkbox" id="mgrAuto"> Let the manager choose what the anvil makes (you and your apprentices)</label>
           <div class="two">
@@ -621,7 +649,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- SMITH GUILD -->
       <section id="p-guild" hidden>
         <div class="stack">
-          <div class="pagehead"><span id="ghTitle">Guilds</span> <small id="ghSub"></small><span class="you">You are here</span></div>
+          <div class="pagehead"><span id="ghTitle">Guilds</span> <small id="ghSub"></small></div>
           <div>
             <div class="tabstrip" role="tablist" id="gtop"><button class="gtab" role="tab" data-t="smith">Smith Guild</button><button class="gtab" role="tab" data-t="merch">Merchants Guild</button><button class="gtab" role="tab" data-t="mine">Miners Guild</button></div>
             <div class="tabpanel raised">
@@ -659,20 +687,11 @@ button,.stage,select{touch-action:manipulation}
       <fieldset><legend>Your staff</legend><div class="stack"><div id="staffRows"></div>
         <span class="note" id="staffEmpty">No staff yet. Hire at the Smith Guild job board. Wages come out of your gold every second; unpaid workers quit after a minute.</span>
         <span class="num" id="wageTxt"></span></div></fieldset>
-      <fieldset><legend>smithy.log</legend><div class="log well" id="log" aria-live="polite"></div></fieldset>
+      <fieldset id="logBox" hidden><legend>Event log</legend><div class="log well" id="log"></div></fieldset>
     </aside>
   </div>
-  <div class="foot"><div class="status num"><div class="well" id="where"></div><div class="well" id="madeTxt">Items forged: 0</div><div class="well" id="saveTxt">Not saved yet</div></div></div>
 </div>
 
-<div class="app raised locwin">
-  <div class="bar"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" fill="#c0c0c0"/><path d="M3 12l3-4 2 2 2-3 3 5z" fill="#008000"/><circle cx="11" cy="6" r="1.5" fill="#ffd23f"/></svg><span id="sceneTitle">Location</span>
-    <button class="tb" aria-hidden="true" tabindex="-1">_</button><button class="tb" aria-hidden="true" tabindex="-1">×</button></div>
-  <div class="sbody">
-    <div class="sunken locscene" id="locScene"></div>
-    <div class="sunken talk"><div class="who" id="talkWho"></div><div class="line" id="talkLine" aria-live="polite"></div><div class="doing" id="talkDoing"></div></div>
-  </div>
-</div>
 </div></div>
 
 <div class="startmenu raised" id="startmenu" hidden>
@@ -680,11 +699,13 @@ button,.stage,select{touch-action:manipulation}
   <ul>
     <li><button id="mSave">💾&nbsp; Save game</button></li>
     <li><button id="mSound">🔊&nbsp; Sound: on</button></li>
+    <li><button id="mLog">📜&nbsp; Event log: hidden</button></li>
     <li><button id="mBoot">🖥&nbsp; Boot screen: on</button></li>
     <li><button id="mRestart">🔄&nbsp; Restart Smithy OS</button></li>
     <hr>
     <li><button id="mExport">📤&nbsp; Export save…</button></li>
     <li><button id="mImport">📥&nbsp; Import save…</button></li>
+    <li><button id="mGuide">💡&nbsp; Show guide</button></li>
     <li><button id="mAbout">❓&nbsp; How to play</button></li>
     <hr>
     <li><button id="mReset">⏻&nbsp; Format C: (reset)…</button></li>
@@ -702,6 +723,8 @@ button,.stage,select{touch-action:manipulation}
     <div class="note plcredit" id="plCredit"></div>
   </div>
 </div>
+
+<div class="balloon" id="balloon" hidden role="status" aria-live="polite"><b>Smithy 97</b><span class="bt"></span></div>
 
 <div class="modal" id="modal" hidden>
   <div class="win raised" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -738,10 +761,10 @@ const R={
 };
 const PAGES=[
   {id:'back',label:'Back of Smithy',key:'1',icon:'<rect x="2" y="5" width="12" height="9" fill="#7a4e36"/><rect x="6" y="9" width="4" height="5" fill="#ff9a1f"/>'},
-  {id:'front',label:'Front of Smithy',key:'2',icon:'<rect x="1" y="7" width="14" height="7" fill="#8a5a34"/><path d="M1 7l2-5h10l2 5z" fill="#c62828"/>'},
+  {id:'front',label:'Front of Smithy',key:'2',rev:'front',icon:'<rect x="1" y="7" width="14" height="7" fill="#8a5a34"/><path d="M1 7l2-5h10l2 5z" fill="#c62828"/>'},
   {id:'market',label:'Market',key:'3',icon:'<rect x="3" y="8" width="5" height="4" fill="#c8743a" stroke="#000"/><rect x="8" y="9" width="5" height="4" fill="#7d7a78" stroke="#000"/>'},
-  {id:'out',label:'Outskirts',key:'4',icon:'<path d="M1 14l5-8 3 4 2-2 4 6z" fill="#6e7d5a"/><rect x="6" y="10" width="4" height="4" fill="#2a1d14"/>'},
-  {id:'guild',label:'Guilds',key:'5',icon:'<path d="M8 1l6 3v4c0 4-3 6-6 7-3-1-6-3-6-7V4z" fill="#000080"/><path d="M5 8l2 2 4-4" stroke="#ffd23f" stroke-width="2" fill="none"/>'},
+  {id:'out',label:'Outskirts',key:'4',req:'pick',icon:'<path d="M1 14l5-8 3 4 2-2 4 6z" fill="#6e7d5a"/><rect x="6" y="10" width="4" height="4" fill="#2a1d14"/>'},
+  {id:'guild',label:'Guilds',key:'5',rev:'guild',icon:'<path d="M8 1l6 3v4c0 4-3 6-6 7-3-1-6-3-6-7V4z" fill="#000080"/><path d="M5 8l2 2 4-4" stroke="#ffd23f" stroke-width="2" fill="none"/>'},
   {id:'mail',label:'Inbox',key:'6',req:'email',icon:'<rect x="1" y="3" width="14" height="10" fill="#ffffe0" stroke="#000"/><path d="M1 3l7 6 7-6" fill="none" stroke="#000"/>'},
   {id:'map',label:'Map',key:'8',req:'map_barony',icon:'<rect x="1" y="2" width="14" height="12" fill="#e8d8a8" stroke="#000"/><path d="M5 2v12M10 2v12" stroke="#8a6a3a"/><circle cx="8" cy="8" r="2" fill="#c62828"/>'},
   {id:'office',label:'Office',key:'7',req:'manager',icon:'<rect x="2" y="2" width="12" height="13" fill="#fff" stroke="#000"/><path d="M4 5h8M4 8h8M4 11h5" stroke="#000080"/>'}
@@ -750,7 +773,7 @@ const T=[
   // Smith Guild tech tree (no g)
   {id:'pick',tier:1,name:'Pickaxe',cost:15,once:1,desc:()=>'Dig copper in the Outskirts. Without a license it\'s illegal: if the warden catches you, you pay a fine and the mines close for a while.'},
   {id:'pot',tier:1,name:'Copper Pot Pattern',cost:30,once:1,desc:()=>'Forge copper pots: 2 copper ingots, sells around 14 g. Lets you hire apprentices.'},
-  {id:'hammer',tier:1,name:'Heavier Hammer',cost:20,mult:1.7,desc:l=>`+1 strike per blow (now ${1+l}).`},
+  {id:'hammer',tier:1,name:'Heavier Hammer',cost:20,mult:1.7,req:['pick'],desc:l=>`+1 strike per blow (now ${1+l}).`},
   {id:'bellows',tier:1,name:'Bigger Bellows',cost:30,mult:1.8,max:5,desc:l=>`Each pump adds more heat (now +${pumpAmt(l)}%). Lets you hire a stoker.`},
   {id:'lining',tier:2,name:'Firebrick Lining',cost:50,mult:1.6,req:['bellows'],desc:l=>`Smelts 40% faster, holds +5 ore, cools slower (Lv ${l}).`},
   {id:'iron',tier:2,name:'Iron Smelting',cost:90,once:1,req:['bellows'],desc:()=>'Iron ore appears at the Market. Needs a HOT furnace (60%). Unlocks iron horseshoes.'},
@@ -841,6 +864,7 @@ let QUIET=false;
 function addXP(g,n){
   if(!n)return;S.xp[g]=(S.xp[g]||0)+n;const r=rankOf(S.xp[g]);if(r<=rk(g))return;S.rk[g]=r;const k=RANKS[r],G=GUILDS[g];
   log(`${G.name} promotion! You are now Rank ${k.l}: ${G.titles[r]}.`);
+  if(!BG)track(`rank/${g}-${k.l}`,`${G.name} rank ${k.l}`);
   if(!QUIET){tone(523,1046,.5,'triangle',.06);dialog(`${G.name} Promotion`,`<b>Rank ${k.l}: ${G.titles[r]}</b><br><br>The ${G.name} recognizes your work.<br>Perk: ${G.perk(r)}.`,ICON_INFO,[['OK']]);}
 }
 function badgeSVG(r){const k=RANKS[r],fs=k.l.length===1?32:k.l.length===2?25:19,top=r>=7;
@@ -856,7 +880,13 @@ function fresh(){
   staff:[],posts:{},greet:0,rep:0,webT:0,webRuns:0,xp:{smith:0,merch:0,mine:0},rk:{smith:0,merch:0,mine:0},town:'oakridge',gtop:'smith',mins:{},oreMin:{},oreMax:{copper:2,iron:5},mgrAuto:true,mgrT:0,mgrMsg:'',v:5,flow:0,flows:0,dig:0,mineCD:0,caught:0,minerAcc:0,hopAcc:0,keepAcc:0,page:'back',log:[],sound:true,t:Date.now(),seen:{}};
 }
 /* ---------------- world: shared company state + one smithy per town ---------------- */
-const SHARED=['gold','earned','log','sound','uid','t','page','gtop','gtab','v','noBoot','musicOn','mVol','mTrack','mRepeat1'];
+const SHARED=['gold','earned','log','sound','uid','t','page','gtop','gtab','v','noBoot','musicOn','mVol','mTrack','mRepeat1','funnel','playSec','sessions','showLog','sceneOpen','rev','tutOff','tutDone'];
+/* ---------------- drop-off tracking (itch build only; off unless a GoatCounter code is set) ---------------- */
+const GC_CODE=(window.SMITHY_GOATCOUNTER||'').trim();
+function gcSend(path,title){if(!GC_CODE)return;try{const u=`https://${GC_CODE}.goatcounter.com/count?p=${encodeURIComponent(path)}&t=${encodeURIComponent(title)}&e=true&s=${screen.width}&rnd=${Math.random().toString(36).slice(2)}`;new Image().src=u;}catch(e){}}
+function track(id,title){if(!W)return;W.funnel=W.funnel||{};if(W.funnel[id])return;W.funnel[id]=Date.now();gcSend('/'+id,title||id);}
+const fmtDur=s=>{s=Math.floor(s||0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}h ${m}m`:`${m}m ${s%60}s`;};
+const TIME_MARKS=[[60,'01min'],[300,'05min'],[900,'15min'],[1800,'30min'],[3600,'1h'],[7200,'2h'],[14400,'4h'],[36000,'10h']];
 let W=null,S=null,BG=false;
 function bindTown(tw){SHARED.forEach(k=>{delete tw[k];Object.defineProperty(tw,k,{get:()=>W[k],set:v=>{W[k]=v;},enumerable:false,configurable:true});});return tw;}
 function freshWorld(){const t=fresh();W={cur:'oakridge',towns:{},maps:{},caravans:[],mapSel:'oakridge'};SHARED.forEach(k=>{if(k in t)W[k]=t[k];});W.v=6;W.towns.oakridge=bindTown(t);return W;}
@@ -910,7 +940,12 @@ function icon(kind,m,cls){const [c,h,d]=MC[m]||MC.iron;let g='';
   else if(kind==='sword')g=`<path d="M13 0l2.5 3v14h-5V3z" fill="${h}" stroke="${d}"/><path d="M13 2v14" stroke="${c}"/><rect x="5" y="17" width="16" height="3" fill="#a07a2a" stroke="#3a2a10"/><rect x="11.5" y="20" width="3" height="4" fill="#5a3a1a" stroke="#2a1a0a"/><circle cx="13" cy="25" r="1.5" fill="#a07a2a"/>`;
   return `<svg viewBox="0 0 26 26"${cls?` class="${cls}"`:''} aria-hidden="true">${g}</svg>`;}
 
-function log(msg,warn){const ts=new Date().toTimeString().slice(0,5),pre=BG&&S&&TOWNS[S.town]?`<${TOWNS[S.town].name}> `:'';S.log.push({m:`[${ts}] ${pre}${msg}`,w:!!warn});if(S.log.length>50)S.log.shift();renderLog();}
+function log(msg,warn){const ts=new Date().toTimeString().slice(0,5),pre=BG&&S&&TOWNS[S.town]?`<${TOWNS[S.town].name}> `:'';S.log.push({m:`[${ts}] ${pre}${msg}`,w:!!warn});if(S.log.length>50)S.log.shift();renderLog();
+  if(!QUIET&&!BG&&!(W&&W.showLog))balloon(msg,warn);}
+// small tray balloon for events (replaces the always-on log)
+let balT=null;
+function balloon(msg,warn,title,ms){const b=document.getElementById('balloon');if(!b)return;b.querySelector('b').textContent=title||'Smithy 97';b.querySelector('.bt').textContent=msg;b.classList.toggle('warn',!!warn);b.hidden=false;
+  clearTimeout(balT);balT=setTimeout(()=>{b.hidden=true;},ms||(warn?6500:4000));}
 function renderLog(){const el=$('log');el.innerHTML='';S.log.forEach(l=>{const d=document.createElement('div');d.textContent=l.m;if(l.w)d.className='w';el.appendChild(d)});el.scrollTop=el.scrollHeight;}
 function once(key,msg,warn){if(S.seen[key])return;S.seen[key]=1;log(msg,warn);}
 
@@ -925,14 +960,14 @@ function strike(amount,manual){
   let done=0;S.job.p+=amount;
   while(S.job&&S.job.p>=R[S.job.k].need){
     const extra=S.job.p-R[S.job.k].need;S.stock[S.job.k]=(S.stock[S.job.k]||0)+1;S.made++;done++;addXP('smith',R[S.job.k].ing);
-    once('first','Forged! Take it to Front of Smithy to sell or fill a quest.');
+    once('first','Forged! Take it to Front of Smithy to sell or fill a quest.');track('step/07-first-forge','Forged first item');
     S.job=null;if(startJob(true))S.job.p=extra;
   }
   return done;
 }
 function sell(k,n,rate){
   n=Math.min(n,S.stock[k]||0);if(n<=0)return 0;
-  const g=Math.round(n*sellPrice(k)*(rate||1));S.stock[k]-=n;S.gold+=g;S.earned+=g;recent.push([Date.now(),g]);addXP('merch',g/3);return g;
+  const g=Math.round(n*sellPrice(k)*(rate||1));S.stock[k]-=n;S.gold+=g;S.earned+=g;recent.push([Date.now(),g]);addXP('merch',g/3);track('step/08-first-sale','Sold first item');return g;
 }
 
 /* ---------------- quests ---------------- */
@@ -993,7 +1028,7 @@ function genApps(r){const R0=ROLES[r];return [0,1,2].map(()=>{const skill=1+Math
 function hire(r,id){const p=S.posts[r],R0=ROLES[r];if(!p||!p.apps)return;const a=p.apps.find(x=>x.id===id);
   if(!a||staffOf(r).length>=R0.max||S.gold<a.fee)return;S.gold-=a.fee;S.staff.push({id:a.id,role:r,name:a.name,skill:a.skill,wage:a.wage,unpaid:0,earned:0,txp:0});
   p.apps=p.apps.filter(x=>x!==a);if(!p.apps.length||staffOf(r).length>=R0.max)delete S.posts[r];
-  log(`Hired ${a.name} as your ${R0.name.toLowerCase()} for ${a.wage} g/min.`);clink(true);render();}
+  log(`Hired ${a.name} as your ${R0.name.toLowerCase()} for ${a.wage} g/min.`);clink(true);track('step/11-first-hire','Hired first worker');render();}
 function dismiss(id){const w=S.staff.find(x=>x.id===id);if(!w)return;S.staff=S.staff.filter(x=>x!==w);log(`You let ${w.name} go.`);render();}
 const ORE_SELL=.8,INGOT_SELL=1.15;
 const r1=n=>Math.round(n*10)/10;
@@ -1017,7 +1052,7 @@ const spawnMult=()=>S.adT>0?2.5:1;
 function reserved(k){let n=0;S.quests.forEach(q=>{if(q.k===k)n+=q.qty});S.contracts.forEach(c=>{if(c.k===k)n+=c.qty-c.done});return n;}
 function deliverQuest(id){
   const q=S.quests.find(x=>x.id===id);if(!q||S.page!=='front'||(S.stock[q.k]||0)<q.qty)return;
-  S.stock[q.k]-=q.qty;pay(q.reward);log(`Quest complete. ${q.who} pays ${q.reward} g.`);clink(true);addXP('smith',Math.round(q.reward*.5));gainRep(1);
+  S.stock[q.k]-=q.qty;pay(q.reward);log(`Quest complete. ${q.who} pays ${q.reward} g.`);clink(true);addXP('smith',Math.round(q.reward*.5));gainRep(1);track('step/09-first-quest','Finished first customer order');
   S.quests=S.quests.filter(x=>x!==q);render();
 }
 function runAd(){
@@ -1083,7 +1118,7 @@ function shipContract(id){
   const c=S.contracts.find(x=>x.id===id);if(!c||S.page!=='front')return;
   const n=Math.min(S.stock[c.k]||0,c.qty-c.done);if(n<1)return;
   S.stock[c.k]-=n;c.done+=n;clink(true);
-  if(c.done>=c.qty){pay(c.reward);log(`Contract fulfilled! ${c.org} pays ${fmt(c.reward)} g.`);addXP('smith',Math.round(c.reward*.3));addXP('merch',Math.round(c.reward*.1));gainRep(REPG[ctier(c)],c.org);S.contracts=S.contracts.filter(x=>x!==c);}
+  if(c.done>=c.qty){pay(c.reward);log(`Contract fulfilled! ${c.org} pays ${fmt(c.reward)} g.`);addXP('smith',Math.round(c.reward*.3));addXP('merch',Math.round(c.reward*.1));gainRep(REPG[ctier(c)],c.org);track('step/13-first-contract','Finished first contract');S.contracts=S.contracts.filter(x=>x!==c);}
   else log(`Shipped ${n} × ${R[c.k].name} to ${c.org} (${c.done}/${c.qty}).`);
   render();
 }
@@ -1105,7 +1140,7 @@ function sim(dt){
   if(lvl('hopper')){S.hopAcc+=dt;while(S.hopAcc>=1){S.hopAcc--;for(const f of S.furn){const o=f.type||f.set;
     if(S.pile[o]>=1&&f.ore<fCap()){S.pile[o]--;f.ore++;f.type=o;}}}}
   for(const f of S.furn){
-    if(f.ore>=1){f.acc+=smeltRateOf(f)*dt;while(f.acc>=1&&f.ore>=1){f.ore--;S.ingots[f.type]++;f.acc--;once('ingot','First ingot! Click the anvil to forge it.');}}
+    if(f.ore>=1){f.acc+=smeltRateOf(f)*dt;while(f.acc>=1&&f.ore>=1){f.ore--;S.ingots[f.type]++;f.acc--;once('ingot','First ingot! Click the anvil to forge it.');track('step/06-first-ingot','Smelted first ingot');}}
     if(f.ore<1){f.acc=Math.min(f.acc,.99);f.type=null;}}
   S.minerAcc+=minerRate()*(1+.05*rk('mine'))*(1+.25*lvl('shaft'))*dt;while(S.minerAcc>=1){S.minerAcc--;S.pile[(lvl('ironpick')&&Math.random()<(lvl('sorting')?.5:1/3))?'iron':'copper']++;addXP('mine',.5);}
   const a=apprRate()*dt;if(a>0)strike(a,false);
@@ -1199,7 +1234,7 @@ function loadOre(){
   if(f.type&&f.type!==o){log(`Furnace ${S.fsel+1} is still smelting ${ORES[f.type].name.toLowerCase()}. Let it finish before adding ${ORES[o].name.toLowerCase()}.`,true);return;}
   if(S.pile[o]<1){log(`No ${ORES[o].name.toLowerCase()} ore in the pile. Buy some at the Market.`,true);return;}
   const n=Math.min(S.pile[o],fCap()-f.ore);if(n<1){log(`Furnace ${S.fsel+1} is full.`);return;}
-  S.pile[o]-=n;f.ore+=n;f.type=o;whoosh();
+  S.pile[o]-=n;f.ore+=n;f.type=o;whoosh();track('step/05-ore-in-furnace','Loaded the furnace');
   if(f.heat<ORES[o].heat)once('cold'+o,`Ore is in. ${ORES[o].name} needs ${ORES[o].heat}% heat. Pump the bellows.`,true);render();
 }
 function pump(){if(S.page!=='back')return;const f=F();f.heat=Math.min(100,f.heat+pumpAmt());whoosh();render();}
@@ -1231,11 +1266,12 @@ function buyOre(o,n){
   const p=orePay(o),max=Math.floor(S.gold/p);n=n==='max'?max:Math.min(n,max);
   if(n<1){log(`${ORES[o].name} ore costs ${gp(p)} g. You have ${fmt(S.gold)} g.`,true);return;}
   const cost=r1(n*p);S.gold-=cost;S.pile[o]+=n;clink(true);addXP('merch',cost/10);log(`Bought ${n} ${ORES[o].name.toLowerCase()} ore for ${gp(cost)} g. Delivered to the back of the smithy.`);
-  once('bought','Go to Back of Smithy and put the ore in the furnace.');if(S.furn.length===1&&!F().type)F().set=o;render();
+  once('bought','Go to Back of Smithy and put the ore in the furnace.');track('step/04-bought-ore','Bought ore');if(S.furn.length===1&&!F().type)F().set=o;render();
 }
 function buyNode(n){
   if(n.soon||nodeMaxed(n)||!nodeOpen(n))return;const c=nodeCost(n);if(S.gold<c)return;
   S.gold-=c;if(n.map)W.maps[n.id]=1;else S.up[ukey(n.id)]=lvl(n.id)+1;clink(true);
+  track('step/10-first-upgrade','Bought first upgrade');track('unlock/'+n.id,'Unlocked '+n.name);
   if(n.map){buildTabs();log(`${n.name} bought. Open the Map (8) to found new smithies.`);}addXP(n.g||'smith',Math.round(c*.1));log(`${GUILDS[n.g||'smith'].name}: ${n.g==='merch'?'bought':'learned'} ${n.name}${n.once?'':' (Lv '+lvl(n.id)+')'}.`);
   if(n.id==='charter')log('You joined the Miners Guild. Visit its hall for licenses and mine upgrades.');
   if(n.id==='fax')log('The fax machine whirs to life. Bigger contracts will arrive in your Inbox.');
@@ -1262,7 +1298,7 @@ function townSummary(t){const wage=t.staff.reduce((a,w)=>a+w.wage,0),un=t.staff.
 function travel(id){if(!W.towns[id]||id===W.cur)return;const from=TOWNS[S.town].name;W.cur=id;S=W.towns[id];W.mapSel=id;sceneKey='';
   log(`You travel from ${from} to ${TOWNS[id].name}.`);buildTabs();buildSelects();go(S.page);}
 function foundTown(id){const tw=TOWNS[id];if(W.towns[id]||!lvl(tw.map)||S.gold<tw.cost)return;
-  S.gold-=tw.cost;W.towns[id]=newTown(id);clink(true);log(`You founded a new smithy in ${tw.name}! You bring your hammer, pickaxes and patterns. Everything else starts fresh.`);travel(id);}
+  S.gold-=tw.cost;W.towns[id]=newTown(id);clink(true);track('step/14-second-town','Founded another town');log(`You founded a new smithy in ${tw.name}! You bring your hammer, pickaxes and patterns. Everything else starts fresh.`);travel(id);}
 function sendCaravan(){const to=$('cvTo').value,key=$('cvWhat').value,have=cargoGet(S,key);let q=Math.min(Math.max(1,Math.floor(+$('cvQty').value||0)),have);
   if(!to||!W.towns[to]||q<1)return;const fee=cvFee(to,q);if(S.gold<fee){log(`The caravan master wants ${fee} g.`,true);return;}
   S.gold-=fee;cargoAdd(S,key,-q);const tt=travelTime(S.town,to);W.caravans.push({id:uid(),from:S.town,to,key,qty:q,left:tt,total:tt});clink(true);
@@ -1321,13 +1357,83 @@ function renderMap(){
   syncList($('cvRows'),W.caravans,()=>{const tr=document.createElement('tr');tr.innerHTML='<td class="cg"></td><td class="rt"></td><td class="r et"></td>';return tr;},
     (tr,c)=>{setText(tr.querySelector('.cg'),`${c.qty} × ${cargoName(c.key)}`);setText(tr.querySelector('.rt'),`${TOWNS[c.from].name} → ${TOWNS[c.to].name}`);setText(tr.querySelector('.et'),mmss(c.left));});
 }
-const avail=p=>!p.req||lvl(p.req)>0;
+const avail=p=>(!p.req||lvl(p.req)>0)&&(!p.rev||!!(W.rev&&W.rev[p.rev]));
+/* ---------------- gradual reveal: pages and panels appear as they become useful ---------------- */
+const REVEAL_MSG={
+  front:['New: Front of Smithy','Your shop. Sell what you forge and fill customers’ orders here.'],
+  guild:['New: Guilds','Spend gold on upgrades and new patterns at the Smith Guild.'],
+  jobs:['Smith Guild job board unlocked','Post a job ad at the Smith Guild to hire help. Pick from cheap or skilled applicants.'],
+  out:['New: Outskirts','Dig your own ore in the mine. Without a license it’s illegal, so watch for the warden.']
+};
+let revSilent=true;
+function updateReveal(){
+  W.rev=W.rev||{};const r=W.rev,tw=Object.values(W.towns);let changed=false;
+  const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k])balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],7000);}};
+  set('front',tw.some(t=>t.made>0||t.earned>0||Object.values(t.stock).some(v=>v>0)));
+  set('guild',W.earned>0||tw.some(t=>Object.keys(t.up).length>0));
+  set('out',lvl('pick')>0);
+  set('jobs',S.staff.length>0||lvl('bellows')>0||lvl('pot')>0||lvl('dig')>0||lvl('sign')>0);
+  if(changed)buildTabs();
+  revSilent=false;
+}
+function applyReveal(){
+  const r=W.rev||{},iron=oreOpen('iron'),show=(el,c)=>{if(el)el.hidden=!c;};
+  const fs=id=>{const e=$(id);return e?e.closest('fieldset'):null;};
+  show(fs('sideOrders'),!!r.front);
+  show(fs('staffRows'),S.staff.length>0||lvl('bellows')>0||lvl('pot')>0);
+  show(document.querySelector('.ftabs'),iron||S.furn.length>1);
+  if(!iron)$('buildF').hidden=true;
+  show($('oreSel').closest('.row'),iron);
+  show($('recipe').closest('.row'),Object.keys(R).filter(unlocked).length>1||!!lvl('manager'));
+  show($('slot3'),lvl('bellows')>0||lvl('hopper')>0||staffOf('stoker').length>0);
+  show(fs('mSellRows'),!!r.front);
+  document.querySelectorAll('#oreRows tr:not([data-o])').forEach(tr=>tr.hidden=!iron);
+  show(fs('adBtn'),lvl('ads')>0||lvl('sign')>0||lvl('crier')>0);
+  // guilds: Miners hall after the pickaxe, Job Board once you can hire
+  const mineTab=document.querySelector('#gtop .gtab[data-t="mine"]'),jobTab=document.querySelector('#gtabs .gtab[data-g="jobs"]');
+  const canMine=lvl('pick')>0,canHire=!!r.jobs;
+  show(mineTab,canMine);show(jobTab,canHire);
+  if(!canMine&&S.gtop==='mine')S.gtop='smith';if(!canHire&&S.gtab==='jobs')S.gtab='tree';
+  // tech tree: show what you own or can work toward next; hide the rest
+  document.querySelectorAll('#tree .tier').forEach(col=>{let any=false;col.querySelectorAll('.node').forEach(d=>{const n=node(d.dataset.id),vis=lvl(n.id)>0||!(n.req||[]).some(x=>!lvl(x));d.hidden=!vis;any=any||vis;});col.hidden=!any;});
+  document.querySelectorAll('#merchNodes .node,#mineNodes .node').forEach(d=>{const n=node(d.dataset.id);d.hidden=!(lvl(n.id)>0||!(n.req||[]).some(x=>!lvl(x)));});
+}
+/* ---------------- guide (tutorial) ---------------- */
+const tab=p=>`#tabs button[data-p="${p}"]`;
+const anyIngot=()=>S.ingots.copper>0||S.ingots.iron>0;
+const GUIDE=[
+  {t:'Click the <b>Market</b> tab at the bottom of the screen.',done:()=>S.page==='market'||S.pile.copper>0||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,el:()=>tab('market')},
+  {t:'Buy <b>5 copper ore</b>. It costs your starting gold.',done:()=>S.pile.copper>0||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,pg:'market',el:()=>'#oreRows tr[data-o="copper"] button[data-n="5"]'},
+  {t:'Go to <b>Back of Smithy</b>, your workshop.',done:()=>S.page==='back'||S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,el:()=>tab('back')},
+  {t:'Click <b>Put in copper ore</b> to load the furnace.',done:()=>S.furn.some(f=>f.ore>0)||anyIngot()||S.made>0,pg:'back',el:()=>'#loadBtn'},
+  {t:'Click <b>Pump bellows</b> until the heat bar passes the black line. Ingots appear once it’s hot.',done:()=>S.furn.some(f=>f.type&&f.heat>=ORES[f.type].heat)||anyIngot()||S.made>0,pg:'back',el:()=>'#bellowsBtn'},
+  {t:'When an ingot is ready, <b>click the anvil</b> again and again to hammer out Copper Nails.',done:()=>S.made>0,pg:'back',el:()=>anyIngot()||S.job?'#stage':'#bellowsBtn'},
+  {t:'Go to <b>Front of Smithy</b>, your shop.',done:()=>S.page==='front'||S.earned>0,el:()=>tab('front')},
+  {t:'Click <b>Deliver</b> for a customer, or <b>Sell</b> your nails. Keep forging if you need more.',done:()=>S.earned>0,pg:'front',el:()=>{const d=document.querySelector('#walkins .dl:not(:disabled)');return d?'#walkins .dl:not(:disabled)':'#sellRows tr[data-k="nails"] button[data-s="1"]';}},
+  {t:()=>S.gold<15?'Earn <b>15 g</b> by forging and selling, then learn the <b>Pickaxe</b> at the Guilds. It lets you dig copper for free in the Outskirts.':'Open the <b>Guilds</b> and learn the <b>Pickaxe</b> (15 g). Keep the rest for ore. The Pickaxe lets you dig copper for free in the Outskirts.',done:()=>!!(W.funnel&&W.funnel['step/10-first-upgrade'])||Object.keys(S.up).length>0,el:()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#tree .node[data-id="pick"] button'}
+];
+let tutEl=null;
+function renderGuide(){
+  const g=$('guide');let target=null;
+  if(W.tutOff||W.tutDone){g.hidden=true;}
+  else{
+    const i=GUIDE.findIndex(s=>!s.done());g.hidden=false;
+    if(i<0){setText($('gTitle'),'You’ve got the basics!');setText($('gStep'),'');
+      $('gText').innerHTML='That’s the loop: <b>buy ore → smelt → forge → sell → upgrade</b>. New tabs and features appear as you unlock them. Reopen this guide from <b>Start → Show guide</b>.';$('gDoneRow').hidden=false;}
+    else{setText($('gTitle'),'Getting started');setText($('gStep'),`Step ${i+1} of ${GUIDE.length}`);const h=typeof GUIDE[i].t==='function'?GUIDE[i].t():GUIDE[i].t;if($('gText').dataset.h!==h){$('gText').dataset.h=h;$('gText').innerHTML=h;}$('gDoneRow').hidden=true;
+      const st=GUIDE[i],sel=st.pg&&S.page!==st.pg?tab(st.pg):st.el();target=sel?document.querySelector(sel):null;}
+  }
+  if(target!==tutEl){if(tutEl)tutEl.classList.remove('tut');tutEl=target;if(tutEl)tutEl.classList.add('tut');}
+}
+$('gHide').onclick=()=>{W.tutOff=1;renderGuide();balloon('Reopen it any time from Start → Show guide.',false,'Guide hidden');};
+$('gOk').onclick=()=>{W.tutDone=1;renderGuide();};
+$('mGuide').onclick=()=>{W.tutOff=0;W.tutDone=0;closeStart();render();};
 function go(p){
   if(!PAGES.some(x=>x.id===p&&avail(x)))p='back';
   if(S.page!==p)S.greet=Math.floor(Math.random()*99);
   S.page=p;PAGES.forEach(x=>$('p-'+x.id).hidden=x.id!==p);
   document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.p===p;b.classList.toggle('down',on);b.setAttribute('aria-selected',on)});
-  $('where').textContent='📍 '+PAGES.find(x=>x.id===p).label;render();
+  render();
   if(!document.body.classList.contains('fitting')&&window.scrollY>0)window.scrollTo(0,0);
 }
 function buildTabs(){
@@ -1610,14 +1716,15 @@ function talk(p,q,closed){
   return['You',u?`${u} unread message${u>1?'s':''}. The modem screeches happily.`:S.webT>0?'Your banner ad is spinning on Oakridge Online. Offers should roll in soon.':'No new mail. The modem hums quietly.','Checking email at your desk.'];
 }
 let sceneKey='';
+let vigEl=null;
+document.querySelectorAll('.pagehead').forEach(h=>h.insertAdjacentHTML('beforeend','<div class="vig" aria-hidden="true"></div>'));
 function renderScene(){
   const p=S.page,q=S.quests[0],closed=S.mineCD>0;
   const key=[p,p==='back'?S.furn.map(f=>Math.round(f.heat/8)).join('.')+'/'+(S.job?1:0):'',S.staff.map(w=>w.id).join('.'),q?q.id:'',closed?1:0,lvl('pick'),lvl('dig'),oreOpen('iron'),
     p==='front'?Object.keys(R).map(k=>Math.min(S.stock[k]||0,3)).join(''):p==='out'?Math.min(S.pile.copper+S.pile.iron,12)+'/'+Math.min(S.pile.iron,12):'',S.mail.some(m=>!m.read)?1:0,S.webT>0?1:0,S.town,Object.keys(W.towns).length,Object.keys(S.posts).length,S.gtop,lvl('charter')].join('|');
-  if(key!==sceneKey){sceneKey=key;$('locScene').innerHTML=sceneSVG(p,q,closed);}
-  const [who,line,doing]=talk(p,q,closed);
-  setText($('talkWho'),who);setText($('talkLine'),line);setText($('talkDoing'),'📍 '+doing);
-  setText($('sceneTitle'),`Location — ${TOWNS[S.town].name} · ${PAGES.find(x=>x.id===p).label}`);
+  const v=document.querySelector(`#p-${p} .pagehead .vig`);if(!v||!v.offsetParent)return;
+  if(v!==vigEl){if(vigEl)vigEl.innerHTML='';vigEl=v;sceneKey='';}   // only one live copy, so the SVG ids never clash
+  if(key!==sceneKey){sceneKey=key;v.innerHTML=sceneSVG(p,q,closed);const [who,line]=talk(p,q,closed);v.title=`${who}: ${line}`;}
 }
 
 /* ---------------- render ---------------- */
@@ -1842,7 +1949,7 @@ function render(){
     guild:Object.values(S.posts).some(p=>p.apps)||S.staff.some(w=>w.unpaid)||T.some(n=>!n.soon&&!nodeMaxed(n)&&nodeOpen(n)&&S.gold>=nodeCost(n)&&(n.once||!lvl(n.id)))
   };
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('alert',!!alerts[b.dataset.p]&&b.dataset.p!==S.page));
-  setText($('madeTxt'),`Ranks: Smith ${RANKS[rk('smith')].l} · Merchants ${RANKS[rk('merch')].l} · Miners ${RANKS[rk('mine')].l} · Rep ${fmt(S.rep)}`);
+  updateReveal();applyReveal();renderGuide();
   renderScene();
 }
 
@@ -1866,8 +1973,8 @@ $('mReset').onclick=()=>{closeStart();dialog('Format C:',`All gold, stock and gu
 
 /* ---------------- save / load ---------------- */
 const KEY='smithy97.save.v3';
-function save(manual){W.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(W));setText($('saveTxt'),'Saved '+new Date().toTimeString().slice(0,5));if(manual)log('Game saved.')}
-  catch(e){setText($('saveTxt'),'Saving unavailable');if(manual)log('This browser blocked saving. Progress lasts until you close the page.',true)}}
+function save(manual){W.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(W));if(manual)log('Game saved.')}
+  catch(e){if(manual)log('This browser blocked saving. Progress lasts until you close the page.',true)}}
 function load(obj){
   if(!obj){try{const raw=localStorage.getItem(KEY);if(raw)obj=JSON.parse(raw)}catch(e){}}
   if(!obj||typeof obj!=='object')return false;
@@ -1931,34 +2038,35 @@ function boot(){
     s.buffer=buf;f.type='bandpass';f.frequency.value=freq;f.Q.value=1.2;g.gain.value=vol;s.connect(f).connect(g).connect(a.destination);s.start(a.currentTime+at);}
   const seek=()=>{const n=4+Math.floor(Math.random()*4);for(let i=0;i<n;i++)hiss(.03,.3,900+Math.random()*900,i*.06+Math.random()*.03);};
   const line=(txt,cls)=>{const d=document.createElement('div');d.textContent=txt||'\u00a0';if(cls)d.className=cls;scr.appendChild(d);return d;};
-  function typeCmd(txt,at,after){T(()=>{const p='C:\\> ',d=line(p,'cur');let i=0;
-    const step=()=>{if(i<txt.length){d.textContent=p+txt.slice(0,++i);hiss(.012,.4,3200);T(step,25+Math.random()*35);}else{d.classList.remove('cur');if(after)after();}};step();},at);}
-  function finish(){if(done)return;done=true;timers.forEach(clearTimeout);el.classList.add('out');setTimeout(()=>{el.hidden=true;BOOTING=false;if(started)musicKick();},460);}
+  function typeCmd(txt,at,after,spd){T(()=>{const p='C:\\> ',d=line(p,'cur');let i=0;
+    const step=()=>{if(i<txt.length){d.textContent=p+txt.slice(0,++i);hiss(.012,.4,3200);T(step,(spd||25)+Math.random()*(spd?spd:35));}else{d.classList.remove('cur');if(after)after();}};step();},at);}
+  function finish(){if(done)return;done=true;timers.forEach(clearTimeout);el.classList.add('out');track('step/03-in-game','Reached the game');setTimeout(()=>{el.hidden=true;BOOTING=false;if(started)musicKick();},460);}
   function splash(){scr.hidden=true;spl.hidden=false;
     [523.25,659.25,783.99,1046.5].forEach((f,i)=>beep(f,f,2.4-i*.2,'triangle',.06,i*.15));beep(130.8,130.8,2.8,'sine',.08);beep(1568,1568,1.4,'sine',.02,.7);
-    const bar=$('bootBar'),msg=$('bootMsg'),msgs=['Loading furnace drivers...','Polishing the anvil...','Counting the gold...',`Welcome back to ${TOWNS[S.town].name}.`],t0=performance.now(),D=2800;
-    const f=now=>{if(done)return;const p=Math.min(1,(now-t0)/D);bar.style.width=(p*100)+'%';setText(msg,msgs[Math.min(3,Math.floor(p*4))]);if(Math.random()<.05)seek();
-      if(p<1)requestAnimationFrame(f);else T(finish,500);};requestAnimationFrame(f);}
-  function run(){if(started)return;started=true;A();pw.hidden=true;scr.hidden=false;
+    const bar=$('bootBar'),msg=$('bootMsg'),msgs=['Loading furnace drivers...','Polishing the anvil...',`Welcome to ${TOWNS[S.town].name}.`],t0=performance.now(),D=1100;
+    const f=now=>{if(done)return;const p=Math.min(1,(now-t0)/D);bar.style.width=(p*100)+'%';setText(msg,msgs[Math.min(2,Math.floor(p*3))]);if(Math.random()<.05)seek();
+      if(p<1)requestAnimationFrame(f);else T(finish,250);};requestAnimationFrame(f);}
+  function run(){if(started)return;started=true;A();pw.hidden=true;scr.hidden=false;track('step/02-powered-on','Started the boot');
     beep(1000,1000,.14,'square',.05);
     line('Anvil BIOS v4.51PG, Copyright (C) 1997 Smithy Systems Inc.');
     line('Main Processor : Hammer-486 DX2 66MHz');
     const mem=line('Memory Test    : 0K');let k=0;
-    const memStep=()=>{k=Math.min(16384,k+512+Math.floor(Math.random()*512));mem.textContent=`Memory Test    : ${k}K${k>=16384?' OK':''}`;if(k>=16384)mem.className='ok';beep(1800,1800,.012,'square',.012);if(k<16384)T(memStep,40);};T(memStep,300);
-    T(()=>{line('');line('Detecting Primary Master ... FURNACE-HD 540MB');seek();},1500);
-    T(()=>{line('Detecting Primary Slave  ... BELLOWS-CD 4x');seek();},1900);
-    T(()=>{line('Detecting Secondary      ... ANVIL-FDD 1.44MB');hiss(.2,.18,600);},2300);
-    T(()=>{line('');line('Starting Smithy OS...');line('');},2700);
-    typeCmd('HIMEM.SYS /ore',3100,()=>line('HIMEM: 16384K of ore memory available','ok'));
-    typeCmd('MOUNT ANVIL /hammer',3900,()=>{line('Anvil mounted. Hammer ready.','ok');seek();});
-    typeCmd(`SMITHY.EXE /town:${TOWNS[S.town].name.toUpperCase().replace(/ /g,'')}`,4900,()=>{seek();T(splash,500);});
+    const memStep=()=>{k=Math.min(16384,k+2048+Math.floor(Math.random()*1024));mem.textContent=`Memory Test    : ${k}K${k>=16384?' OK':''}`;if(k>=16384)mem.className='ok';beep(1800,1800,.012,'square',.012);if(k<16384)T(memStep,30);};T(memStep,120);
+    T(()=>{line('Detecting drives ... FURNACE-HD 540MB, ANVIL-FDD 1.44MB');seek();},450);
+    typeCmd(`SMITHY.EXE /town:${TOWNS[S.town].name.toUpperCase().replace(/ /g,'')}`,700,()=>{seek();T(splash,150);},12);
   }
   pw.onclick=run;
   BOOTKEY=e=>{if(e.key==='Escape'){finish();return;}if(!started)run();};
   $('bootSkip').onclick=e=>{e.stopPropagation();finish();};
+  // on itch the player already clicked "Run game": boot straight away, sound unlocks on their first click
+  // boot starts on load; sound kicks in on the player's first click
+  $('bootSnd').hidden=!!(ac&&ac.state==='running');run();
 }
 document.addEventListener('keydown',e=>{if(BOOTING&&BOOTKEY){e.preventDefault();e.stopImmediatePropagation();BOOTKEY(e);}},true);
 const bootLabel=()=>$('mBoot').innerHTML='🖥&nbsp; Boot screen: '+(W.noBoot?'off':'on');
+const logLabel=()=>{$('mLog').innerHTML='📜&nbsp; Event log: '+(W.showLog?'shown':'hidden');$('logBox').hidden=!W.showLog;if(W.showLog)renderLog();};
+$('mLog').onclick=()=>{W.showLog=!W.showLog;logLabel();if(W.showLog)$('balloon').hidden=true;};
+$('balloon').onclick=()=>{$('balloon').hidden=true;};
 $('mBoot').onclick=()=>{W.noBoot=!W.noBoot;bootLabel();};
 $('mRestart').onclick=()=>{closeStart();save(false);boot();};
 /* ---------------- music player ---------------- */
@@ -1967,14 +2075,25 @@ const TRACKS=[
 ];
 const audio=new Audio();audio.preload='auto';
 let trk=0,mStarted=false,fadeT=null,plKey='';
-const vol=()=>(W.mVol??50)/100;
+// slider 0-100 mapped on a curve so low settings are actually quiet; default is low
+const vol=()=>Math.pow((W.mVol??25)/100,2);
+// iOS ignores audio.volume, so music goes through a Web Audio gain node when possible
+let mGain=null;
+function mGraph(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state!=='running')ac.resume();
+  if(!mGain){const src=ac.createMediaElementSource(audio);mGain=ac.createGain();src.connect(mGain).connect(ac.destination);}audio.volume=1;}catch(e){mGain=null;}}
+function setVol(v){if(mGain){mGain.gain.value=v;}else{try{audio.volume=v;}catch(e){}}}
 function mLoad(i){trk=((i%TRACKS.length)+TRACKS.length)%TRACKS.length;W.mTrack=trk;audio.src=TRACKS[trk].src;audio.loop=TRACKS.length===1||!!W.mRepeat1;renderPlayer();}
-function mPlay(fade){if(!audio.src)mLoad(W.mTrack||0);clearInterval(fadeT);
-  if(fade){audio.volume=0;let v=0;fadeT=setInterval(()=>{v=Math.min(vol(),v+vol()/30);audio.volume=v;if(v>=vol())clearInterval(fadeT);},50);}else audio.volume=vol();
+function mPlay(fade){if(!audio.src)mLoad(W.mTrack||0);clearInterval(fadeT);mGraph();
+  if(fade){setVol(0);let v=0;fadeT=setInterval(()=>{v=Math.min(vol(),v+vol()/30);setVol(v);if(v>=vol())clearInterval(fadeT);},50);}else setVol(vol());
   const p=audio.play();if(p&&p.catch)p.catch(()=>{});W.musicOn=true;renderPlayer();}
 function mPause(){clearInterval(fadeT);audio.pause();W.musicOn=false;renderPlayer();}
 function musicKick(){if(mStarted||BOOTING)return;mStarted=true;mLoad(W.mTrack||0);if(W.musicOn!==false)mPlay(true);}
-['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(!mStarted&&!BOOTING)musicKick();},true));
+['pointerdown','keydown','touchend'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(ac&&ac.state!=='running'){try{ac.resume();}catch(_){}}
+  const sh=$('bootSnd');if(sh&&!sh.hidden)sh.hidden=true;
+  if(!mStarted){if(!BOOTING)musicKick();}
+  else if(W.musicOn!==false&&audio.paused&&!BOOTING&&!(e.target.closest&&e.target.closest('#player')))mPlay(true);
+},true));
 audio.addEventListener('ended',()=>{if(!audio.loop){mLoad(trk+1);mPlay();}});
 audio.addEventListener('play',()=>renderPlayer());audio.addEventListener('pause',()=>renderPlayer());
 audio.addEventListener('timeupdate',()=>plTime());audio.addEventListener('loadedmetadata',()=>plTime());
@@ -1984,7 +2103,7 @@ function plTime(){const d=audio.duration||0;$('plBar').style.width=(d?audio.curr
 function renderPlayer(){const t=TRACKS[trk],on=!audio.paused;document.body.classList.toggle('playing',on);
   setText($('plName'),`♪ ${t.title} — ${t.artist}`);setText($('plCredit'),`Music: “${t.title}” by ${t.artist}`);
   setText($('plPlay'),on?'❚❚':'▶');$('plPlay').setAttribute('aria-label',on?'Pause':'Play');
-  $('plRep').setAttribute('aria-pressed',String(!!W.mRepeat1));$('plVol').value=W.mVol??50;
+  $('plRep').setAttribute('aria-pressed',String(!!W.mRepeat1));$('plVol').value=W.mVol??25;
   $('musicBtn').title=on?`Now playing: ${t.title} — ${t.artist}`:'Music player';
   const k=TRACKS.length+'|'+trk;if(k!==plKey){plKey=k;const l=$('plList');l.innerHTML='';TRACKS.forEach((x,i)=>{const li=document.createElement('li');li.dataset.i=i;if(i===trk)li.className='on';
     li.innerHTML=`<span>${String(i+1).padStart(2,'0')}.</span><span class="tt"></span><span class="ar"></span>`;li.querySelector('.tt').textContent=x.title;li.querySelector('.ar').textContent=x.artist;l.appendChild(li);});}
@@ -1998,7 +2117,7 @@ $('plPlay').onclick=()=>{if(audio.paused)mPlay();else mPause();};
 $('plPrev').onclick=()=>{if(audio.currentTime>3){audio.currentTime=0;return;}const p=!audio.paused;mLoad(trk-1);if(p)mPlay();};
 $('plNext').onclick=()=>{const p=!audio.paused;mLoad(trk+1);if(p)mPlay();};
 $('plRep').onclick=()=>{W.mRepeat1=!W.mRepeat1;audio.loop=TRACKS.length===1||!!W.mRepeat1;renderPlayer();};
-$('plVol').oninput=e=>{W.mVol=+e.target.value;clearInterval(fadeT);audio.volume=vol();};
+$('plVol').oninput=$('plVol').onchange=e=>{W.mVol=+e.target.value;clearInterval(fadeT);if(!mGain&&!audio.paused)mGraph();setVol(vol());};
 $('plSeek').onclick=e=>{const r=e.currentTarget.getBoundingClientRect(),d=audio.duration;if(d)audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*d;};
 $('plSeek').onkeydown=e=>{if(!audio.duration)return;if(e.key==='ArrowRight'){audio.currentTime=Math.min(audio.duration,audio.currentTime+5);e.preventDefault();}if(e.key==='ArrowLeft'){audio.currentTime=Math.max(0,audio.currentTime-5);e.preventDefault();}};
 $('plList').onclick=e=>{const li=e.target.closest('li');if(!li)return;mLoad(+li.dataset.i);mPlay();};
@@ -2009,7 +2128,7 @@ function saveCode(){W.t=Date.now();return SAVE_TAG+btoa(unescape(encodeURICompon
 function readCode(txt){txt=(txt||'').trim().replace(/\s+/g,'');if(txt.startsWith(SAVE_TAG))txt=txt.slice(SAVE_TAG.length);
   const o=JSON.parse(decodeURIComponent(escape(atob(txt))));if(!o||typeof o!=='object'||!(o.towns||o.pile))throw new Error('not a save');return o;}
 $('mExport').onclick=()=>{closeStart();save(false);const code=saveCode();
-  dialog('Export save',`Copy this code and keep it somewhere safe. Paste it into <b>Import save</b> in any copy of Smithy 97 (on itch.io, another browser or another device) to pick up where you left off.<textarea class="savecode" id="codeOut" readonly aria-label="Save code"></textarea><div class="row" style="margin-top:6px"><button id="codeCopy">Copy code</button><span class="note" id="codeMsg"></span></div>`,ICON_INFO,[['Close']]);
+  dialog('Export save',`<b>Time played:</b> ${fmtDur(W.playSec)} · <b>Visits:</b> ${W.sessions||1}<br><br>Copy this code and keep it somewhere safe. Paste it into <b>Import save</b> in any copy of Smithy 97 (on itch.io, another browser or another device) to pick up where you left off.<textarea class="savecode" id="codeOut" readonly aria-label="Save code"></textarea><div class="row" style="margin-top:6px"><button id="codeCopy">Copy code</button><span class="note" id="codeMsg"></span></div>`,ICON_INFO,[['Close']]);
   const ta=$('codeOut');ta.value=code;
   $('codeCopy').onclick=()=>{const done=()=>setText($('codeMsg'),'Copied!');const fall=()=>{ta.focus();ta.select();setText($('codeMsg'),'Selected. Press Ctrl+C (or long-press → Copy).');};
     try{navigator.clipboard.writeText(code).then(done,fall);}catch(e){fall();}};};
@@ -2023,17 +2142,33 @@ $('mImport').onclick=()=>{closeStart();
 
 /* ---------------- loop ---------------- */
 let last=performance.now(),saveT=0;
+/* safety net: if you can't buy ore, have nothing to smelt, forge or sell, and can't dig, the guild covers a few ore */
+let stuckT=0;
+function checkStuck(dt){
+  const opens=Object.keys(ORES).filter(oreOpen),cheap=Math.min(...opens.map(orePay));
+  const stuck=S.gold<cheap&&!opens.some(o=>S.pile[o]>0)&&!S.furn.some(f=>f.ore>0)&&!S.job
+    &&!Object.keys(R).some(k=>unlocked(k)&&S.ingots[R[k].metal]>=R[k].ing)
+    &&!Object.values(S.stock).some(v=>v>0)&&lvl('pick')<1
+    &&!Object.keys(ORES).some(o=>S.ingots[o]>0);
+  stuckT=stuck?stuckT+dt:0;
+  if(stuckT>3){stuckT=0;const g=Math.ceil(cheap*5)-S.gold;S.gold+=g;
+    log(`Out of gold and ore? The Smith Guild advances you ${fmt(g)} g for ore. Keep a little gold back for ore next time.`,true);render();}
+}
 function tick(now){const dt=Math.min(1,(now-last)/1000);last=now;
-  const cur=W.towns[W.cur];for(const id in W.towns){S=W.towns[id];BG=S!==cur;QUIET=BG;sim(dt);}BG=false;QUIET=false;S=cur;tickCaravans(dt);saveT+=dt;if(saveT>10){saveT=0;save(false)}render();requestAnimationFrame(tick);}
+  if(!document.hidden&&!BOOTING){W.playSec=(W.playSec||0)+dt;for(const [s,lab] of TIME_MARKS)if(W.playSec>=s)track('time/'+lab,`Played ${lab}`);}
+  const cur=W.towns[W.cur];for(const id in W.towns){S=W.towns[id];BG=S!==cur;QUIET=BG;sim(dt);}BG=false;QUIET=false;S=cur;if(!BOOTING)checkStuck(dt);tickCaravans(dt);saveT+=dt;if(saveT>10){saveT=0;save(false)}render();requestAnimationFrame(tick);}
 function clock(){setText($('clock'),new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}))}
 
 function start(data){
-  const had=load(data&&data.state);
+  const had=load(data&&data.state),gap=had?Date.now()-(W.t||Date.now()):0;
+  if(!(data&&data.state)){W.sessions=(W.sessions||0)+1;track('step/01-loaded','Opened the game');
+    [2,3,5,10,25].forEach(n=>{if(W.sessions>=n)track('return/visit-'+String(n).padStart(2,'0'),`Visit #${n}`);});
+    if(gap>18*3600*1000)track('return/next-day','Came back another day');}
   buildTabs();buildSelects();buildSell();buildTree();buildJobs();buildOffice();
   if(!had)intro();else renderLog();
-  soundLabel();bootLabel();go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
+  soundLabel();bootLabel();logLabel();if(!W.tutDone&&GUIDE.every(s=>s.done()))W.tutDone=1;go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
   renderPlayer();
-  if(!(data&&data.state)&&!W.noBoot)boot();
+  if(!(data&&data.state)&&!W.noBoot)boot();else track('step/03-in-game','Reached the game');
 }
 window.claude?.hot?.snapshot?.(()=>({state:JSON.parse(JSON.stringify(Object.assign({},W,{t:Date.now()})))}));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
