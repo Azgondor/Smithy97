@@ -43,6 +43,24 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 .bar svg{width:16px;height:16px;flex:none}
 .bar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb{width:16px;height:14px;padding:0;min-height:0;display:grid;place-items:center;font:bold 9px/1 var(--ui);color:var(--ink)}
+/* spotlight tutorial with Clink the anvil */
+#tutor .tdim{position:fixed;z-index:60;pointer-events:auto}   /* invisible click blockers; the ring's shadow does the darkening (no seams) */
+#tutor .tdim.full{background:rgba(0,0,0,.68)}
+#tutor.free .tdim,#tutor.free .tring{display:none}
+#tutor .tring{position:fixed;z-index:59;pointer-events:none;border-radius:3px;outline:3px solid #ffd23f;box-shadow:0 0 0 9999px rgba(0,0,0,.68);animation:tutp 1s ease-in-out infinite}
+#tutor .clippy{position:fixed;z-index:62;display:flex;align-items:flex-end;gap:6px;width:min(380px,calc(100vw - 16px));pointer-events:auto}
+#tutor .clinkbot{width:56px;height:56px;flex:none;animation:bob 2.4s ease-in-out infinite}
+#tutor .clinkbot .eyes{animation:blink 4s infinite;transform-origin:15px 8px}
+@keyframes bob{50%{transform:translateY(-4px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+#tutor .cbox{flex:1;min-width:0;background:#ffffe1;color:#000;border:1px solid #000;border-radius:6px;padding:8px 10px;box-shadow:3px 3px 0 rgba(0,0,0,.35);font:13px/1.4 var(--ui);position:relative}
+#tutor .cbox::before{content:"";position:absolute;left:-9px;bottom:14px;border:8px solid transparent;border-left:0;border-right-color:#000}
+#tutor .cbox::after{content:"";position:absolute;left:-7px;bottom:15px;border:7px solid transparent;border-left:0;border-right-color:#ffffe1}
+#tutor .cname{font-weight:bold;font-size:12px;margin-bottom:3px}
+#tutor .cstep{font-weight:normal;color:#555;margin-left:6px}
+#tutor .crow{display:flex;gap:6px;align-items:center;margin-top:8px}
+#tutor .cskip{font-size:11px}
+@media (prefers-reduced-motion:reduce){#tutor .clinkbot,#tutor .clinkbot .eyes,#tutor .tring{animation:none}}
 /* guide (tutorial) */
 .guide{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:#ffffe1;border:1px solid #000;box-shadow:2px 2px 0 rgba(0,0,0,.3)}
 .guide>svg{width:28px;height:28px;flex:none}
@@ -69,6 +87,7 @@ body{background:var(--desk);color:var(--ink);font:12px/1.35 var(--ui);
 .balloon b{display:block;margin-bottom:2px}
 .balloon.prio{border-width:2px}
 .testing{padding:6px 8px;background:#ffffe1;border:1px solid #000}
+.otown .lcd{font-size:18px;padding:2px 8px}.otown .two{gap:8px}
 .gtab.new::after{content:"NEW";margin-left:6px;padding:0 4px;font-size:10px;font-weight:bold;color:#fff;background:#c00000;vertical-align:1px}
 .balloon.warn b{color:var(--bad)}
 .status{display:flex;gap:2px}
@@ -121,8 +140,8 @@ legend{position:absolute;top:-7px;left:8px;background:var(--face);padding:0 3px}
 .stage{cursor:pointer;touch-action:manipulation}
 .stage:focus-visible{outline:1px dotted var(--hi);outline-offset:-4px}
 .stage svg.anvil{position:absolute;left:50%;bottom:10px;width:min(340px,90%);transform:translateX(-50%)}
-.hammer{position:absolute;left:50%;top:12%;width:120px;margin-left:16px;transform-origin:100% 85%;transform:rotate(-38deg);transition:transform .16s ease-in}
-.stage.hit .hammer{transform:rotate(6deg);transition:transform .05s ease-in}
+.hammer{position:absolute;left:50%;bottom:184px;width:120px;margin-left:-40px;transform-origin:100% 50%;transform:rotate(40deg);transition:transform .16s ease-in}   /* pivot at the grip; the head comes down on the ingot */
+.stage.hit .hammer{transform:rotate(-17.5deg);transition:transform .05s ease-in}
 .spark{position:absolute;width:3px;height:3px;background:var(--fire1);box-shadow:0 0 4px var(--fire2);pointer-events:none;animation:fly .55s ease-out forwards}
 @keyframes fly{to{transform:translate(var(--dx),var(--dy));opacity:0}}
 .pop{position:absolute;font:20px var(--mono);color:var(--fire1);text-shadow:1px 1px var(--fire3);pointer-events:none;animation:up .8s ease-out forwards}
@@ -219,7 +238,7 @@ tr.locked td{color:var(--shade)}
 .gtab{box-shadow:inset 1px 1px var(--hi),inset 2px 2px var(--lite),inset -1px 0 var(--dark),inset -2px 0 var(--shade);padding:4px 14px;margin-top:3px;min-height:22px}
 .gtab:active:not(:disabled){box-shadow:inset 1px 1px var(--hi),inset 2px 2px var(--lite),inset -1px 0 var(--dark),inset -2px 0 var(--shade);padding:4px 14px}
 .gtab.on{margin-top:0;padding-bottom:7px;font-weight:bold}
-.gtab.alert:not(.on){animation:blink 1s steps(1) infinite}
+.gtab.alert:not(.on){color:#000080;font-weight:bold}
 .tabpanel{padding:8px 6px 6px}
 /* guild rank */
 .rank{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:center;padding:6px 8px}
@@ -240,7 +259,7 @@ tr.locked td{color:var(--shade)}
 .ftlist button,#buildF{padding:2px 6px;min-height:20px;font-size:11px}
 .ftlist button.on{font-weight:bold;box-shadow:inset -1px -1px var(--hi),inset 1px 1px var(--dark),inset -2px -2px var(--lite),inset 2px 2px var(--shade);background:var(--lite)}
 .ftlist button .hd{display:inline-block;width:7px;height:7px;margin-right:3px;vertical-align:0;box-shadow:inset -1px -1px var(--dark),inset 1px 1px var(--hi)}
-.ftlist button.alert:not(.on){animation:blink 1s steps(1) infinite}
+.ftlist button.alert:not(.on){color:#000080;font-weight:bold}
 /* map */
 .mapwrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,1fr);gap:8px}
 @media (max-width:760px){.mapwrap{grid-template-columns:minmax(0,1fr)}}
@@ -350,7 +369,8 @@ tr.locked td{color:var(--shade)}
 .tabs button{flex:0 1 160px;min-width:64px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;gap:5px;align-items:center}
 .tabs button svg{width:14px;height:14px;flex:none}
 .tabs button span{overflow:hidden;text-overflow:ellipsis}
-.tabs button.alert:not(.down){animation:blink 1s steps(1) infinite}
+.tabs button.alert:not(.down){background:#000080;color:#fff}   /* solid, never flashing */
+.tabs button .cnt{font-style:normal;font-weight:bold;margin-left:4px}
 @keyframes blink{50%{background:var(--sel);color:var(--hi)}}
 .tray{padding:4px 8px;white-space:nowrap;display:flex;gap:8px;align-items:center;flex:none}
 .startmenu{position:fixed;left:max(4px,env(safe-area-inset-left,0px));bottom:calc(32px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;padding:3px;min-width:210px}
@@ -378,6 +398,7 @@ button,.stage,select{touch-action:manipulation}
   .pagehead{min-height:0;padding-right:8px}.pagehead .vig{display:none}
   .furnace{height:170px}
   .stage{height:210px}
+  .hammer{bottom:160px}
   .banner{height:84px}
   .locscene{height:150px}
   .log{height:110px}
@@ -385,6 +406,7 @@ button,.stage,select{touch-action:manipulation}
   button.big{min-height:40px}
   .tabs button{flex:0 0 auto;min-width:40px;justify-content:center;padding:4px 8px}
   .tabs button span{display:none}
+  .tabs button{position:relative}.tabs button .cnt{position:absolute;top:1px;right:1px;margin:0;font-size:10px;line-height:12px;padding:0 3px;background:#c00000;color:#fff}
   .tabs button.down span{display:inline}
   .tabs button svg{width:16px;height:16px}
   #trayTown{display:none}
@@ -401,7 +423,7 @@ button,.stage,select{touch-action:manipulation}
   #oreRows td:nth-child(3),#oreRows td:nth-child(4),#p-market .two>fieldset:first-child th:nth-child(3),#p-market .two>fieldset:first-child th:nth-child(4){display:none}
   #chanRows td:nth-child(3),#p-mail fieldset:first-of-type th:nth-child(3){display:none}
   .step input{width:36px}
-  #chanRows td,#minRows td,#mSellRows td:first-child{white-space:normal}
+  #chanRows td,.otown td:first-child,#mSellRows td:first-child{white-space:normal}
   #chanRows button{white-space:normal}
   .step button{min-width:20px;padding:1px 3px}
   #oreRows button,#mSellRows button,#sellRows button{padding:3px 6px}
@@ -452,7 +474,7 @@ button,.stage,select{touch-action:manipulation}
       <!-- BACK OF SMITHY: workshop -->
       <section id="p-back" hidden>
         <div class="stack">
-          <div class="pagehead">Back of Smithy <small>furnace &amp; anvil</small></div>
+          <div class="pagehead">Smithy <small>furnace &amp; anvil</small></div>
           <div class="work" id="workGrid">
             <div class="stack" id="furnCol">
               <div class="ftabs"><div class="ftlist" id="ftabs" role="tablist"></div><button id="buildF"></button></div>
@@ -485,7 +507,7 @@ button,.stage,select{touch-action:manipulation}
                 <div class="hint" id="hint"></div>
                 <div class="flowlbl num" id="flowLbl" hidden></div>
                 <div class="flowbar" id="flowBar"></div>
-                <svg class="hammer" viewBox="0 0 110 40" aria-hidden="true"><rect x="0" y="14" width="80" height="9" fill="#7a4a22" stroke="#2b1405"/><rect x="74" y="0" width="30" height="38" fill="#6d7378" stroke="#1d2024"/><rect x="76" y="2" width="6" height="34" fill="#9aa1a6"/></svg>
+                <svg class="hammer" viewBox="0 0 110 40" aria-hidden="true"><rect x="28" y="14" width="80" height="9" fill="#7a4a22" stroke="#2b1405"/><rect x="2" y="0" width="30" height="38" fill="#6d7378" stroke="#1d2024"/><rect x="4" y="2" width="6" height="34" fill="#9aa1a6"/></svg>
                 <svg class="anvil" viewBox="0 0 250 120" aria-hidden="true">
                   <rect id="bar" x="78" y="16" width="70" height="9" rx="2" fill="#3a3a3a"/>
                   <path d="M20 26h170l40-10v12l-40 14H150v20h20v10h20v14H50V72h20V62h10V42H40z" fill="#4a5056" stroke="#121417" stroke-width="2"/>
@@ -499,6 +521,7 @@ button,.stage,select{touch-action:manipulation}
               <div class="row num"><span class="grow" id="jobTxt">Idle</span></div>
               <div class="prog sunken"><i id="jobBar"></i></div>
               <div class="info num" id="info"></div>
+              <fieldset id="backSell"><legend>Sell your work</legend><div class="list sunken"><table class="num"><tbody id="bSellRows"></tbody></table></div></fieldset>
             </div>
           </div>
         </div>
@@ -640,19 +663,12 @@ button,.stage,select{touch-action:manipulation}
       <!-- OFFICE -->
       <section id="p-office" hidden>
         <div class="stack">
-          <div class="pagehead">Office <small>workshop manager</small></div>
-          <div class="lcd num"><span id="mgrLcd"></span></div>
-          <label class="row" for="mgrAuto"><input type="checkbox" id="mgrAuto"> Let the manager choose what the anvil makes (you and your apprentices)</label>
-          <div class="two">
-            <fieldset><legend>Keep in stock: goods</legend>
-              <div class="stack"><div class="list sunken"><table class="num"><thead><tr><th>Item</th><th class="r">Stock</th><th class="r">Orders</th><th class="r">Keep at least</th><th>Status</th></tr></thead><tbody id="minRows"></tbody></table></div>
-              <span class="note">Orders from customers and contracts count on top of your minimum. Your shopkeeper never sells below it.</span></div>
-            </fieldset>
-            <fieldset><legend>Keep in stock: ore</legend>
-              <div class="stack"><div class="list sunken"><table class="num"><thead><tr><th>Ore</th><th class="r">Pile</th><th class="r">Keep at least</th><th class="r">Pay up to</th></tr></thead><tbody id="oreMinRows"></tbody></table></div>
-              <span class="note">When the pile drops below your minimum, the manager buys from Bram, but only at or under your price limit.</span></div>
-            </fieldset>
-          </div>
+          <div class="pagehead">Head Office <small id="oSub">all your smithies</small></div>
+          <fieldset id="oOverview" hidden><legend>All smithies</legend>
+            <div class="list sunken"><table class="num"><thead><tr><th>Smithy</th><th>Manager</th><th>Anvil</th><th class="r">Short</th><th class="r">Orders</th><th class="r">Ore</th><th>Staff</th><th></th></tr></thead><tbody id="oRows"></tbody></table></div>
+          </fieldset>
+          <div class="stack" id="oTowns"></div>
+          <span class="note">Orders from customers and contracts count on top of your minimums, and shopkeepers never sell below them. When an ore pile drops below its minimum, the manager buys from Bram at or under your price limit.</span>
         </div>
       </section>
 
@@ -735,6 +751,22 @@ button,.stage,select{touch-action:manipulation}
 </div>
 
 <div class="balloons" id="balloons" aria-live="polite"></div>
+<div id="tutor" hidden>
+  <div class="tdim" data-s="t"></div><div class="tdim" data-s="b"></div><div class="tdim" data-s="l"></div><div class="tdim" data-s="r"></div>
+  <div class="tring"></div>
+  <div class="clippy" role="dialog" aria-label="Clink, your smithy assistant">
+    <svg class="clinkbot" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">
+      <rect x="3" y="12" width="24" height="5" fill="#4a5056"/><rect x="27" y="12" width="3" height="3" fill="#4a5056"/><rect x="3" y="12" width="24" height="1" fill="#8b939a"/>
+      <rect x="9" y="17" width="12" height="4" fill="#4a5056"/><rect x="7" y="21" width="16" height="3" fill="#3a3f45"/><rect x="5" y="24" width="20" height="3" fill="#2e3237"/>
+      <g class="eyes"><rect x="8" y="5" width="6" height="6" fill="#fff" stroke="#000" stroke-width=".6"/><rect x="16" y="5" width="6" height="6" fill="#fff" stroke="#000" stroke-width=".6"/>
+      <rect class="pup" x="11" y="7" width="2" height="3" fill="#000"/><rect class="pup" x="19" y="7" width="2" height="3" fill="#000"/></g>
+      <rect x="7" y="3" width="6" height="1" fill="#000"/><rect x="17" y="3" width="6" height="1" fill="#000"/>
+      <rect x="12" y="14" width="6" height="1" fill="#1d2024"/>
+    </svg>
+    <div class="cbox"><div class="cname">Clink <span class="cstep num"></span></div><div class="ctext"></div>
+      <div class="crow"><button class="cskip">Skip tutorial</button><span class="grow"></span><button class="cnext">Next</button></div></div>
+  </div>
+</div>
 
 <div class="modal" id="modal" hidden>
   <div class="win raised" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -770,14 +802,14 @@ const R={
   longsword:{name:'Longsword',metal:'iron',ing:5,need:80,price:110,tech:'longsword',icon:'sword'}
 };
 const PAGES=[
-  {id:'back',label:'Back of Smithy',key:'1',icon:'<rect x="2" y="5" width="12" height="9" fill="#7a4e36"/><rect x="6" y="9" width="4" height="5" fill="#ff9a1f"/>'},
-  {id:'front',label:'Front of Smithy',key:'2',rev:'front',icon:'<rect x="1" y="7" width="14" height="7" fill="#8a5a34"/><path d="M1 7l2-5h10l2 5z" fill="#c62828"/>'},
+  {id:'back',label:'Smithy',key:'1',icon:'<rect x="2" y="5" width="12" height="9" fill="#7a4e36"/><rect x="6" y="9" width="4" height="5" fill="#ff9a1f"/>'},
+  {id:'front',label:'Front of Smithy',key:'2',req:'shop',icon:'<rect x="1" y="7" width="14" height="7" fill="#8a5a34"/><path d="M1 7l2-5h10l2 5z" fill="#c62828"/>'},
   {id:'market',label:'Market',key:'3',rev:'market',icon:'<rect x="3" y="8" width="5" height="4" fill="#c8743a" stroke="#000"/><rect x="8" y="9" width="5" height="4" fill="#7d7a78" stroke="#000"/>'},
   {id:'out',label:'Outskirts',key:'4',req:'pick',icon:'<path d="M1 14l5-8 3 4 2-2 4 6z" fill="#6e7d5a"/><rect x="6" y="10" width="4" height="4" fill="#2a1d14"/>'},
   {id:'guild',label:'Guilds',key:'5',rev:'guild',icon:'<path d="M8 1l6 3v4c0 4-3 6-6 7-3-1-6-3-6-7V4z" fill="#000080"/><path d="M5 8l2 2 4-4" stroke="#ffd23f" stroke-width="2" fill="none"/>'},
   {id:'mail',label:'Inbox',key:'6',req:'email',icon:'<rect x="1" y="3" width="14" height="10" fill="#ffffe0" stroke="#000"/><path d="M1 3l7 6 7-6" fill="none" stroke="#000"/>'},
   {id:'map',label:'Map',key:'8',req:'map_barony',icon:'<rect x="1" y="2" width="14" height="12" fill="#e8d8a8" stroke="#000"/><path d="M5 2v12M10 2v12" stroke="#8a6a3a"/><circle cx="8" cy="8" r="2" fill="#c62828"/>'},
-  {id:'office',label:'Office',key:'7',req:'manager',icon:'<rect x="2" y="2" width="12" height="13" fill="#fff" stroke="#000"/><path d="M4 5h8M4 8h8M4 11h5" stroke="#000080"/>'}
+  {id:'office',label:'Head Office',key:'7',req:'manager',icon:'<rect x="2" y="2" width="12" height="13" fill="#fff" stroke="#000"/><path d="M4 5h8M4 8h8M4 11h5" stroke="#000080"/>'}
 ];
 const T=[
   // Smith Guild tech tree (no g)
@@ -797,8 +829,9 @@ const T=[
   {id:'seal',tier:5,name:'Guild Seal',cost:600,mult:1.9,req:['longsword'],desc:l=>`+20% quest rewards (now +${l*20}%).`},
   {id:'silver',tier:5,name:'Silver Assaying',cost:3000,once:1,soon:1,req:['longsword','lining'],desc:()=>'Silver ore and finer goods. Coming in a future version.'},
   // Merchants Guild services
-  {id:'sign',g:'merch',name:'Painted Shop Sign',cost:60,mult:2,max:3,req:['pot'],desc:l=>`+10% on everything sold in your shop (now +${l*10}%). Lets you hire a shopkeeper.`},
-  {id:'ads',g:'merch',name:'Print Shop Contacts',cost:40,once:1,req:['pot'],desc:()=>'Run newspaper ads from your shop: an extra counter spot and customers arrive faster for 3 minutes.'},
+  {id:'shop',g:'merch',name:'Open a Storefront',cost:50,once:1,req:['pick'],desc:()=>'Opens Front of Smithy: a proper shop counter with room for a second customer, the sales board, and shop promotion.'},
+  {id:'sign',g:'merch',name:'Painted Shop Sign',cost:60,mult:2,max:3,req:['pot','shop'],desc:l=>`+10% on everything sold in your shop (now +${l*10}%). Lets you hire a shopkeeper.`},
+  {id:'ads',g:'merch',name:'Print Shop Contacts',cost:40,once:1,req:['pot','shop'],desc:()=>'Run newspaper ads from your shop: an extra counter spot and customers arrive faster for 3 minutes.'},
   {id:'ledger',g:'merch',name:'Trade Ledger',cost:80,mult:1.9,max:3,rk:['merch',1],desc:l=>`Bram gives guild members a discount: 8% off ore per level (now ${l*8}% off).`},
   {id:'map_barony',g:'merch',map:1,name:'Map of the Barony of Varrow (testing)',cost:20000,once:1,req:['seal','clerk','longsword'],rk:['merch',6],desc:()=>'TESTING: the endgame. Reveals Hollowford and Millbrook, where you can found new smithies and send caravans between towns. This part is an early experiment and may change or be removed. More coming soon.'},
   {id:'map_duchy',g:'merch',map:1,soon:1,name:'Map of the Duchy of Fernmoor',cost:6000,once:1,req:['map_barony'],rk:['merch',4],desc:()=>'Reveals Fernmoor and Ashgate, further down the river roads.'},
@@ -823,7 +856,7 @@ const TOWNS={
   kingsreach:{name:'Kingsreach',mine:'Kingsreach Crown Mine',map:'map_kingdom',cont:'valemont',x:235,y:62,cost:40000,ore:{copper:[2,5],iron:[3,8]},bias:{longsword:1.4,pot:1.2},desc:'The capital of Valemont. The royal court is just up the hill.'},
   portsable:{name:'Port Sable',mine:'Sable Shore Diggings',map:'map_wayfarer',cont:'azure',x:432,y:205,cost:120000,ore:{copper:[1,3],iron:[1,4]},bias:{horseshoe:1.3,nails:1.3},desc:'Across the Azure Sea. Ore is plentiful and cheap, and nobody here has heard your name.'}
 };
-const CARRY=['hammer','pick','iron','pot','dagger','longsword'];  // knowledge you bring to every new smithy
+const CARRY=['hammer','pick','iron','pot','dagger','longsword','shop'];  // knowledge you bring to every new smithy
 const oreRange=o=>((TOWNS[S.town]||{}).ore||{})[o]||[ORES[o].min,ORES[o].max];
 const travelTime=(a,b)=>{const A=TOWNS[a],B=TOWNS[b];return Math.round(Math.hypot(A.x-B.x,A.y-B.y)*1.6+60+(A.cont!==B.cont?1500:0));};
 const KINGDOM='Valemont';
@@ -890,7 +923,7 @@ function fresh(){
   staff:[],posts:{},greet:0,rep:0,webT:0,webRuns:0,xp:{smith:0,merch:0,mine:0},rk:{smith:0,merch:0,mine:0},town:'oakridge',gtop:'smith',mins:{},oreMin:{},oreMax:{copper:2,iron:5},mgrAuto:true,mgrT:0,mgrMsg:'',v:5,flow:0,flows:0,dig:0,mineCD:0,caught:0,minerAcc:0,hopAcc:0,keepAcc:0,page:'back',log:[],sound:true,t:Date.now(),seen:{}};
 }
 /* ---------------- world: shared company state + one smithy per town ---------------- */
-const SHARED=['gold','earned','log','sound','uid','t','page','gtop','gtab','v','noBoot','musicOn','mVol','mTrack','mRepeat1','funnel','playSec','sessions','showLog','sceneOpen','rev','tutOff','tutDone'];
+const SHARED=['gold','earned','log','sound','uid','t','page','gtop','gtab','v','noBoot','musicOn','mVol','mTrack','mRepeat1','funnel','playSec','sessions','showLog','sceneOpen','rev','tutOff','tutDone','tutI'];
 /* ---------------- drop-off tracking (itch build only; off unless a GoatCounter code is set) ---------------- */
 const GC_CODE=(window.SMITHY_GOATCOUNTER||'').trim();
 function gcSend(path,title){if(!GC_CODE)return;try{const u=`https://${GC_CODE}.goatcounter.com/count?p=${encodeURIComponent(path)}&t=${encodeURIComponent(title)}&e=true&s=${screen.width}&rnd=${Math.random().toString(36).slice(2)}`;new Image().src=u;}catch(e){}}
@@ -899,7 +932,7 @@ const fmtDur=s=>{s=Math.floor(s||0);const h=Math.floor(s/3600),m=Math.floor(s%36
 const TIME_MARKS=[[60,'01min'],[300,'05min'],[900,'15min'],[1800,'30min'],[3600,'1h'],[7200,'2h'],[14400,'4h'],[36000,'10h']];
 let W=null,S=null,BG=false;
 function bindTown(tw){SHARED.forEach(k=>{delete tw[k];Object.defineProperty(tw,k,{get:()=>W[k],set:v=>{W[k]=v;},enumerable:false,configurable:true});});return tw;}
-function freshWorld(){const t=fresh();W={cur:'oakridge',towns:{},maps:{},caravans:[],mapSel:'oakridge'};SHARED.forEach(k=>{if(k in t)W[k]=t[k];});W.v=6;W.towns.oakridge=bindTown(t);W.gold=0;W.towns.oakridge.ingots.copper=6;return W;}
+function freshWorld(){const t=fresh();W={cur:'oakridge',towns:{},maps:{},caravans:[],mapSel:'oakridge'};SHARED.forEach(k=>{if(k in t)W[k]=t[k];});W.v=6;W.towns.oakridge=bindTown(t);W.gold=0;W.towns.oakridge.ingots.copper=6;W.towns.oakridge.seen.shopMig=1;return W;}
 function newTown(id){
   const t=fresh(),towns=Object.values(W.towns),same=x=>TOWNS[x.town].cont===TOWNS[id].cont;
   t.town=id;bindTown(t);
@@ -908,7 +941,7 @@ function newTown(id){
   for(const g of ['smith','merch','mine']){const best=Math.max(0,...towns.map(x=>(x.xp[g]||0)*(same(x)?.25:.05)));t.xp[g]=Math.round(best);t.rk[g]=rankOf(t.xp[g]);}
   t.rep=Math.round(Math.max(0,...towns.map(x=>(x.rep||0)*(same(x)?.2:.05))));
   const tw=TOWNS[id];for(const o in ORES){const rg=(tw.ore||{})[o]||[ORES[o].min,ORES[o].max];t.op[o]=t.opl[o]=Math.round((rg[0]+rg[1])/2);t.oreMax[o]=t.op[o];}
-  t.questT=10;t.seen={first:1,ingot:1,bought:1};return t;
+  t.questT=10;t.seen={first:1,ingot:1,bought:1,shopMig:1};return t;
 }
 freshWorld();S=W.towns.oakridge;
 const recent=[];
@@ -951,14 +984,16 @@ function icon(kind,m,cls){const [c,h,d]=MC[m]||MC.iron;let g='';
   return `<svg viewBox="0 0 26 26"${cls?` class="${cls}"`:''} aria-hidden="true">${g}</svg>`;}
 
 function log(msg,warn){const ts=new Date().toTimeString().slice(0,5),pre=BG&&S&&TOWNS[S.town]?`<${TOWNS[S.town].name}> `:'';S.log.push({m:`[${ts}] ${pre}${msg}`,w:!!warn});if(S.log.length>50)S.log.shift();renderLog();
-  if(!QUIET&&!BG&&!(W&&W.showLog))balloon(msg,warn);}
+  if(!QUIET&&!BG&&!(W&&W.showLog)&&(warn||performance.now()-lastInput>400)&&!(tutOn()&&!warn))balloon(msg,warn);}
+const tutOn=()=>!!(W&&!W.tutOff&&!W.tutDone);
+let lastInput=-1e9;['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{lastInput=performance.now();},true));
 // small tray balloon for events (replaces the always-on log)
 let balT=null;
 // stacked tray balloons: newest at the bottom, up to 4 at once; repeats of the same message just count up
 const balMax=()=>innerWidth<760?2:4;
 function balloon(msg,warn,title,ms,prio,go){const box=$('balloons');if(!box)return;
   const last=box.lastElementChild;
-  if(last&&last.dataset.m===msg&&!last.classList.contains('out')){last.dataset.n=+last.dataset.n+1;last.querySelector('.bn').textContent='\u00d7'+last.dataset.n;clearTimeout(last._t);last._t=setTimeout(()=>balGone(last),ms||(warn?6500:4500));return;}
+  if(last&&last.dataset.m===msg&&!last.classList.contains('out')){last.dataset.n=+last.dataset.n+1;last.querySelector('.bn').textContent='\u00d7'+last.dataset.n;clearTimeout(last._t);last._t=setTimeout(()=>balGone(last),last._ms||9000);return;}
   const b=document.createElement('div');b.className='balloon'+(warn?' warn':'')+(prio?' prio':'')+(go?' go':'');b.dataset.m=msg;b.dataset.n=1;b.setAttribute('role','status');
   b.innerHTML='<b></b><span class="bt"></span><span class="bn"></span>'+(go?'<span class="bgo">Click to go there \u2192</span>':'');
   b.querySelector('b').textContent=title||'Smithy 97';b.querySelector('.bt').textContent=msg;
@@ -967,7 +1002,8 @@ function balloon(msg,warn,title,ms,prio,go){const box=$('balloons');if(!box)retu
   const items=[...box.children].filter(x=>!x.classList.contains('out'));
   // too many: drop the oldest routine one first, keep unlocks
   while(items.length>balMax()){const k=items.findIndex(x=>!x.classList.contains('prio'));const v=items.splice(k<0?0:k,1)[0];balGone(v);}
-  b._t=setTimeout(()=>balGone(b),ms||(warn?6500:4500));}
+  b._ms=ms||(warn?11000:9000);b._t=setTimeout(()=>balGone(b),b._ms);
+  b.onmouseenter=()=>clearTimeout(b._t);b.onmouseleave=()=>{b._t=setTimeout(()=>balGone(b),3000);};}
 function balGone(b){if(!b||b.classList.contains('out'))return;clearTimeout(b._t);b.classList.add('out');setTimeout(()=>b.remove(),180);}
 function renderLog(){const el=$('log');el.innerHTML='';S.log.forEach(l=>{const d=document.createElement('div');d.textContent=l.m;if(l.w)d.className='w';el.appendChild(d)});el.scrollTop=el.scrollHeight;}
 function once(key,msg,warn){if(S.seen[key])return;S.seen[key]=1;log(msg,warn);}
@@ -1018,7 +1054,7 @@ function managerTick(){
     if(short.length){const k=short[0].k,r=R[k];
       if(S.recipe!==k){
         if(S.job&&S.job.p===0&&S.job.k!==k){S.ingots[R[S.job.k].metal]+=R[S.job.k].ing;S.job=null;}
-        S.recipe=k;const sel=$('recipe');if(sel&&sel.value!==k)sel.value=k;}
+        S.recipe=k;}
       if(S.ingots[r.metal]<r.ing&&!S.furn.some(f=>f.set===r.metal||f.type===r.metal)){const f=S.furn.find(f=>!f.type);if(f)f.set=r.metal;}
       S.mgrMsg=`"We're short ${short[0].d} × ${r.name}. I've got the team on it."`;}
     else S.mgrMsg=Object.keys(S.mins).some(k=>S.mins[k]>0)?'"Everything is stocked to your liking, boss."':'"Set some minimums and I\'ll keep the team busy."';
@@ -1068,13 +1104,13 @@ function sellIngot(o,n){
   const g=r1(n*ingotSell(o));S.ingots[o]-=n;pay(g);clink(true);addXP('merch',g/3);log(`Sold ${n} ${ORES[o].name.toLowerCase()} ingot${n>1?'s':''} to Bram for ${gp(g)} g.`);render();
 }
 function pay(g){S.gold+=g;S.earned+=g;recent.push([Date.now(),g]);}
-const maxWalk=()=>1+lvl('crier')+(S.adT>0?1:0);
+const maxWalk=()=>1+lvl('shop')+lvl('crier')+(S.adT>0?1:0);
 const maxContracts=()=>2+lvl('clerk');
 const adCost=()=>20+10*Math.min(S.adsRun,8);
 const spawnMult=()=>S.adT>0?2.5:1;
 function reserved(k){let n=0;S.quests.forEach(q=>{if(q.k===k)n+=q.qty});S.contracts.forEach(c=>{if(c.k===k)n+=c.qty-c.done});return n;}
 function deliverQuest(id){
-  const q=S.quests.find(x=>x.id===id);if(!q||S.page!=='front'||(S.stock[q.k]||0)<q.qty)return;
+  const q=S.quests.find(x=>x.id===id);if(!q||(S.stock[q.k]||0)<q.qty)return;
   S.stock[q.k]-=q.qty;pay(q.reward);log(`Quest complete. ${q.who} pays ${q.reward} g.`);clink(true);addXP('smith',Math.round(q.reward*.5));gainRep(1);track('step/09-first-quest','Finished first customer order');
   S.quests=S.quests.filter(x=>x!==q);render();
 }
@@ -1138,7 +1174,7 @@ function acceptMail(id){
 }
 function declineMail(id){S.mail=S.mail.filter(x=>x.id!==id);S.mailSel=null;render();}
 function shipContract(id){
-  const c=S.contracts.find(x=>x.id===id);if(!c||S.page!=='front')return;
+  const c=S.contracts.find(x=>x.id===id);if(!c)return;
   const n=Math.min(S.stock[c.k]||0,c.qty-c.done);if(n<1)return;
   S.stock[c.k]-=n;c.done+=n;clink(true);
   if(c.done>=c.qty){pay(c.reward);log(`Contract fulfilled! ${c.org} pays ${fmt(c.reward)} g.`);addXP('smith',Math.round(c.reward*.3));addXP('merch',Math.round(c.reward*.1));gainRep(REPG[ctier(c)],c.org);track('step/13-first-contract','Finished first contract');S.contracts=S.contracts.filter(x=>x!==c);}
@@ -1273,7 +1309,7 @@ $('recipe').onchange=e=>{S.recipe=e.target.value;
   log(`Pattern set: ${R[S.recipe].name}.${S.job&&S.job.k!==S.recipe?' Finishing the current piece first.':''}`);render();};
 $('dig').onclick=()=>{if(!lvl('pick')||S.mineCD>0)return;const o=S.digSel;if(o==='iron'&&!lvl('ironpick'))return;
   if(!lvl('dig')&&Math.random()<.04){caught();return;}
-  S.dig+=digMult()/ORES[o].swings;chunk();if(S.dig>=.999){S.dig=0;S.pile[o]++;addXP('mine',o==='iron'?4:2);}render();};
+  S.seen.swung=(S.seen.swung||0)+1;S.dig+=digMult()/ORES[o].swings;chunk();if(S.dig>=.999){S.dig=0;S.pile[o]++;addXP('mine',o==='iron'?4:2);}render();};
 const fineNow=()=>5+3*S.caught;
 function caught(){
   const fine=fineNow();S.caught++;S.dig=0;let msg;
@@ -1288,8 +1324,8 @@ function caught(){
 function buyOre(o,n){
   const p=orePay(o),max=Math.floor(S.gold/p);n=n==='max'?max:Math.min(n,max);
   if(n<1){log(`${ORES[o].name} ore costs ${gp(p)} g. You have ${fmt(S.gold)} g.`,true);return;}
-  const cost=r1(n*p);S.gold-=cost;S.pile[o]+=n;clink(true);addXP('merch',cost/10);log(`Bought ${n} ${ORES[o].name.toLowerCase()} ore for ${gp(cost)} g. Delivered to the back of the smithy.`);
-  once('bought','Go to Back of Smithy and put the ore in the furnace.');track('step/04-bought-ore','Bought ore');if(S.furn.length===1&&!F().type)F().set=o;render();
+  const cost=r1(n*p);S.gold-=cost;S.pile[o]+=n;clink(true);addXP('merch',cost/10);log(`Bought ${n} ${ORES[o].name.toLowerCase()} ore for ${gp(cost)} g. Delivered to the smithy.`);
+  once('bought','Go to the Smithy and put the ore in the furnace.');track('step/04-bought-ore','Bought ore');if(S.furn.length===1&&!F().type)F().set=o;render();
 }
 function buyNode(n){
   if(n.soon||nodeMaxed(n)||!nodeOpen(n))return;const c=nodeCost(n);if(S.gold<c)return;
@@ -1304,7 +1340,7 @@ function buyNode(n){
   if(n.id==='dig')log('Prospecting License granted. Digging is legal now, and miners can be hired.');
   if(n.id==='iron')log('Iron ore is now sold at the Market. It needs a HOT furnace.');
   if(n.id==='ads')log('The Gazette will print your ads. Run one from Front of Smithy.');
-  if(n.id==='manager'){buildTabs();S.mgrT=1;log('Greta the workshop manager has an Office now (7). Set your minimum stock levels there.');}
+  if(n.id==='manager'){buildTabs();S.mgrT=1;log('Greta the workshop manager opened the Head Office (7). Set minimum stock levels there for every smithy you own.');}
   if(n.id==='email'){S.mailT=Math.min(S.mailT,8);buildTabs();log('Dial-up connected. Bulk orders will arrive in your Inbox (6).');}
   buildSelects();render();
 }
@@ -1380,11 +1416,11 @@ function renderMap(){
   syncList($('cvRows'),W.caravans,()=>{const tr=document.createElement('tr');tr.innerHTML='<td class="cg"></td><td class="rt"></td><td class="r et"></td>';return tr;},
     (tr,c)=>{setText(tr.querySelector('.cg'),`${c.qty} × ${cargoName(c.key)}`);setText(tr.querySelector('.rt'),`${TOWNS[c.from].name} → ${TOWNS[c.to].name}`);setText(tr.querySelector('.et'),mmss(c.left));});
 }
-const avail=p=>(!p.req||lvl(p.req)>0)&&(!p.rev||!!(W.rev&&W.rev[p.rev]));
+const avail=p=>(p.id==='office'?Object.values(W.towns).some(t=>t.up.manager):(!p.req||lvl(p.req)>0))&&(!p.rev||!!(W.rev&&W.rev[p.rev]));
 /* ---------------- gradual reveal: pages and panels appear as they become useful ---------------- */
 const REVEAL_MSG={
   market:['New: Market','Scrap is running low. Buy copper ore from Bram, then smelt it in your furnace.'],
-  front:['New: Front of Smithy','Your shop. Sell what you forge and fill customers’ orders here.'],
+  front:['Storefront open','Front of Smithy is your shop now: a second customer spot, the sales board and shop promotion.'],
   guild:['New: Guilds','Spend gold on upgrades and new patterns at the Smith Guild.'],
   jobs:['Smith Guild job board unlocked','Post a job ad at the Smith Guild to hire help. Pick from cheap or skilled applicants.'],
   out:['New: Outskirts','Dig your own ore in the mine. Without a license it’s illegal, so watch for the warden.']
@@ -1394,8 +1430,8 @@ let revSilent=true;
 document.getElementById('toJobs').onclick=e=>{e.preventDefault();REVEAL_GO.jobs();};
 function updateReveal(){
   W.rev=W.rev||{};const r=W.rev,tw=Object.values(W.towns);let changed=false;
-  const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k])balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],9000,true,REVEAL_GO[k]);}};
-  set('front',tw.some(t=>t.made>0||t.earned>0||Object.values(t.stock).some(v=>v>0)));
+  const set=(k,cond)=>{if(cond&&!r[k]){r[k]=1;changed=true;if(!revSilent&&REVEAL_MSG[k]&&!tutOn())balloon(REVEAL_MSG[k][1],false,REVEAL_MSG[k][0],15000,true,REVEAL_GO[k]);}};
+  set('front',tw.some(t=>t.up.shop));
   set('market',tw.some(t=>t.made>=4||t.pile.copper>0||t.pile.iron>0||t.furn.some(f=>f.ore>0)||Object.keys(t.up).length>0));
   set('guild',W.earned>0||tw.some(t=>Object.keys(t.up).length>0));
   set('out',lvl('pick')>0);
@@ -1407,14 +1443,14 @@ function applyReveal(){
   const r=W.rev||{},iron=oreOpen('iron'),show=(el,c)=>{if(el)el.hidden=!c;};
   const fs=id=>{const e=$(id);return e?e.closest('fieldset'):null;};
   show($('furnCol'),!!r.market);$('workGrid').classList.toggle('nofurn',!r.market);
-  show(fs('sideOrders'),!!r.front);
+  show(fs('sideOrders'),true);
   show(fs('staffRows'),S.staff.length>0||lvl('bellows')>0||lvl('pot')>0);
   show(document.querySelector('.ftabs'),iron||S.furn.length>1);
   if(!iron)$('buildF').hidden=true;
   show($('oreSel').closest('.row'),iron);
   show($('recipe').closest('.row'),Object.keys(R).filter(unlocked).length>1||!!lvl('manager'));
   show($('slot3'),lvl('bellows')>0||lvl('hopper')>0||staffOf('stoker').length>0);
-  show(fs('mSellRows'),!!r.front);
+  show(fs('mSellRows'),!!r.market);
   document.querySelectorAll('#oreRows tr:not([data-o])').forEach(tr=>tr.hidden=!iron);
   show(fs('adBtn'),lvl('ads')>0||lvl('sign')>0||lvl('crier')>0);
   // guilds: Miners hall after the pickaxe, Job Board once you can hire
@@ -1431,39 +1467,92 @@ function applyReveal(){
 /* ---------------- guide (tutorial) ---------------- */
 const tab=p=>`#tabs button[data-p="${p}"]`;
 const anyIngot=()=>S.ingots.copper>0||S.ingots.iron>0;
-const stokerAd=()=>S.posts.stoker&&S.posts.stoker.apps?'#jobs [data-role="stoker"] .cands button':'#jobs [data-role="stoker"] button[data-act="post"]';
+const stokerAd=()=>{const p=S.posts.stoker;if(p&&p.apps&&p.apps.length){const c=p.apps.reduce((a,b)=>b.fee<a.fee?b:a);return `#jobs [data-role="stoker"] .cand[data-id="${c.id}"] button`;}return '#jobs [data-role="stoker"] button[data-act="post"]';};   // point at the cheapest applicant
 const toJobs=()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':S.gtab!=='jobs'?'#gtabs .gtab[data-g="jobs"]':stokerAd();
+const fsOf=id=>()=>{const e=$(id);return e&&e.closest('fieldset');};
+const quest0=()=>S.quests[0];
+const stokerWait=()=>{const p=S.posts.stoker;return !!((p&&!p.apps)||(!p&&S.gold<POST_COST)||(p&&p.apps&&S.gold<Math.min(...p.apps.map(a=>a.fee))));};
+const hotNow=()=>S.furn.some(f=>f.type&&f.heat>=ORES[f.type].heat);
 const GUIDE=[
-  {t:'Click the <b>anvil</b> again and again to hammer a scrap copper bar into Copper Nails.',done:()=>S.made>0||S.earned>0,pg:'back',el:()=>'#stage'},
-  {t:'Go to <b>Front of Smithy</b>, your shop.',done:()=>{if(S.page==='front')S.seen.shop=1;return !!S.seen.shop||S.earned>0;},el:()=>tab('front')},
-  {t:'Click <b>Deliver</b> for a customer, or <b>Sell</b> your nails. Forge more if you need them.',done:()=>S.earned>0,pg:'front',el:()=>{const d=document.querySelector('#walkins .dl:not(:disabled)');return d?'#walkins .dl:not(:disabled)':(S.stock.nails>0?'#sellRows tr[data-k="nails"] button[data-s="1"]':tab('back'));}},
-  {t:'Keep hammering your scrap into nails and selling them. When the scrap runs low, the <b>Market</b> opens.',done:()=>!!(W.rev&&W.rev.market),pg:'back',el:()=>anyIngot()||S.job?'#stage':tab('front')},
-  {t:'Go to the <b>Market</b> and buy <b>copper ore</b>.',done:()=>!!S.seen.bought||!!S.seen.ingot,pg:'market',el:()=>'#oreRows tr[data-o="copper"] button[data-n="5"]'},
-  {t:'Back at the smithy, click <b>Put in copper ore</b> to load the furnace.',done:()=>S.furn.some(f=>f.ore>0)||!!S.seen.ingot,pg:'back',el:()=>'#loadBtn'},
-  {t:'Click <b>Pump bellows</b> until the heat passes the black line. The ore turns into bars you can hammer.',done:()=>!!S.seen.ingot,pg:'back',el:()=>'#bellowsBtn'},
-  {t:()=>S.gold<15?'Forge and sell until you have <b>15 g</b>, then learn the <b>Pickaxe</b> at the Guilds.':'Open the <b>Guilds</b> and learn the <b>Pickaxe</b> (15 g). It opens the Job Board and lets you dig copper for free.',done:()=>lvl('pick')>0,el:()=>S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#tree .node[data-id="pick"] button'},
-  {t:()=>{const p=S.posts.stoker;if(p&&p.apps){const f=Math.min(...p.apps.map(a=>a.fee));return S.gold<f?`Applicants are in! Earn <b>${f} g</b> to pay a hiring fee, then <b>Hire</b> one.`:'Applicants are in! <b>Hire</b> one. Cheap ones are fine to start.';}
-     if(p)return 'Ad posted. Applicants answer in under a minute. Keep forging and selling meanwhile.';
-     return (S.gold<POST_COST?'Forge and sell until you have <b>10 g</b>, then hire':'Hire')+' a <b>stoker</b> at the Job Board: post an ad (10 g), then pick an applicant. A stoker keeps the furnace hot for you.';},done:()=>staffOf('stoker').length>0,el:()=>S.posts.stoker&&!S.posts.stoker.apps?null:toJobs()}
+  {next:1,t:'Hi, I’m <b>Clink</b>, your smithy assistant! I’ll show you how to run this place. Click <b>Next</b>.'},
+  {next:1,el:()=>$('goldTxt').parentNode,t:'This is your <b>gold</b>. You’re starting broke, but the old smith left you a crate of scrap copper bars.'},
+  {next:1,el:fsOf('stock'),t:'Your <b>stock</b>: ore, bars and finished goods. Those 6 copper bars are all you have for now.'},
+  {pg:'back',el:()=>'#stage',done:()=>S.made>0||S.earned>0,t:'Click the <b>anvil</b> to strike. Every 8 strikes hammers one bar into <b>Copper Nails</b>. Give it a go!'},
+  {next:1,skip:()=>!quest0()||S.earned>0,el:fsOf('sideOrders'),t:()=>{const q=quest0();return `Customers post <b>orders</b> here. ${q.who} wants ${q.qty} × ${R[q.k].name} for ${q.reward} g. That pays better than selling them one by one.`;}},
+  {pg:'back',el:()=>'#stage',done:()=>{const q=quest0();return S.earned>0||!q||(S.stock[q.k]||0)>=q.qty;},t:()=>{const q=quest0();return q?`Keep striking until you have <b>${q.qty} ${R[q.k].name}</b>.`:'Keep striking.';}},
+  {pg:'back',el:()=>{const d=document.querySelector('#sideOrders .sdl:not(:disabled):not([hidden])');return d||'#bSellRows tr[data-k="nails"] button[data-s="1"]';},done:()=>S.earned>0,
+    t:()=>document.querySelector('#sideOrders .sdl:not(:disabled):not([hidden])')?'Click <b>Deliver</b> to hand them over and get paid.':'Click <b>Sell 1</b> to sell a nail.'},
+  {next:1,pg:'back',el:fsOf('bSellRows'),t:'You can also sell anything here, any time. Prices drift up and down, so you may get a little more or less.'},
+  {next:1,el:()=>'#tabs',t:'This is the <b>taskbar</b>. New pages appear here as you unlock them. The <b>Guilds</b> just opened. More on those soon!'},
+  {free:1,pg:'back',el:()=>anyIngot()||S.job?'#stage':'#bSellRows tr[data-k="nails"] button[data-s="all"]',done:()=>!!(W.rev&&W.rev.market),t:'Hammer the rest of your scrap and sell it. When the scrap runs low, the <b>Market</b> opens.'},
+  {next:1,pg:'market',el:fsOf('oreRows'),t:'Welcome to the <b>Market</b>. Bram sells ore here. Prices change every few minutes, so buy when it’s cheap.'},
+  {pg:'market',el:()=>`#oreRows tr[data-o="copper"] button[data-n="${S.gold>=S.op.copper*5?5:'max'}"]`,done:()=>!!S.seen.bought||!!S.seen.ingot,t:'Buy some <b>copper ore</b>. It gets delivered to the pile behind your smithy.'},
+  {next:1,pg:'back',el:()=>document.querySelector('.furnace'),t:'Your <b>furnace</b> is fired up now. It turns ore into bars, but only when it’s hot enough.'},
+  {pg:'back',el:()=>'#loadBtn',done:()=>S.furn.some(f=>f.ore>0)||!!S.seen.ingot,t:'Click <b>Put in copper ore</b> to load it.'},
+  {pg:'back',el:()=>'#bellowsBtn',done:()=>S.furn.some(f=>f.type&&f.heat>=ORES[f.type].heat)||!!S.seen.ingot,t:'Now <b>pump the bellows</b> a few times to heat it up.'},
+  {next:1,pg:'back',el:()=>document.querySelector('.prog.heat'),t:'This bar is the <b>heat</b>. Past the <b>black line</b>, ore melts into bars on its own. The fire cools slowly, so pump again when it drops.'},
+  {free:()=>hotNow(),pg:'back',el:()=>hotNow()?document.querySelector('.furnace'):'#bellowsBtn',done:()=>!!S.seen.ingot,t:()=>hotNow()?'Give it a moment while the first bar melts out\u2026':'It cooled down. <b>Pump the bellows</b> to get it hot again.'},
+  {next:1,pg:'guild',el:()=>'#gtop',t:'These are the <b>Guilds</b>. The Smith Guild sells upgrades and runs the job board, and the Merchants Guild handles trade. Each ranks you from G all the way to SSS.'},
+  {free:()=>S.gold<15,pg:()=>S.gold<15?null:'guild',el:()=>S.gold<15?null:S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#tree .node[data-id="pick"] button',done:()=>lvl('pick')>0,
+    t:()=>S.gold<15?'You’ll want <b>15 g</b> for your first upgrade. Forge and sell a bit more, then come back.':'Learn the <b>Pickaxe</b>. It lets you dig your own ore and opens the Job Board.'},
+  {next:1,pg:'out',el:()=>document.querySelector('#p-out .banner'),t:'The <b>Outskirts</b>. With your Pickaxe you can dig copper here for free.'},
+  {pg:'out',el:()=>'#dig',done:()=>(S.seen.swung||0)>=4,t:'Click <b>Swing pickaxe</b> a few times. Careful: without a license it’s illegal, and the warden may fine you!'},
+  {next:1,pg:'guild',el:()=>S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#gtabs .gtab[data-g="jobs"]',t:'The Pickaxe also opened the <b>Job Board</b>. Hire people here and they work for you, even while you’re away.'},
+  {free:()=>{const p=S.posts.stoker;return (p&&!p.apps)||(!p&&S.gold<POST_COST)||(p&&p.apps&&S.gold<Math.min(...p.apps.map(a=>a.fee)));},pg:()=>stokerWait()?null:'guild',el:()=>toJobs(),done:()=>staffOf('stoker').length>0,
+    t:()=>{const p=S.posts.stoker;if(p&&p.apps){const f=Math.min(...p.apps.map(a=>a.fee));return S.gold<f?`Applicants are in! Earn <b>${f} g</b> for the hiring fee, then hire one.`:'Applicants are in! <b>Hire</b> one. Cheap ones are fine to start.';}
+      if(p)return 'Ad posted! Applicants answer in under a minute. Keep forging and selling meanwhile.';
+      return S.gold<POST_COST?'Earn <b>10 g</b>, then post a <b>stoker</b> ad here.':'Post an ad for a <b>stoker</b>. A stoker keeps your furnace hot so you don’t have to.';}},
+  {next:1,el:fsOf('staffRows'),t:'Your staff show up here. They’re paid wages every minute and get better the longer they work.'},
+  {next:1,last:1,t:'That’s the loop: <b>buy or dig ore → smelt → forge → sell → upgrade &amp; hire</b>. The rest is yours to discover. I’ll be in <b>Start → Show guide</b> if you need me. Have fun!'}
 ];
-let tutEl=null;
+const tutVis=el=>!!(el&&el.getClientRects().length&&!el.closest('[hidden]'));
+function curStep(){
+  if(!tutOn())return -1;
+  let i=W.tutI;
+  if(i==null){i=0;if(S.made>0||S.earned>0)GUIDE.forEach((s,k)=>{if(!s.next&&s.done())i=k+1;});if(i>0)while(i<GUIDE.length&&GUIDE[i].next&&!GUIDE[i].last)i++;}  // returning players skip ahead
+  while(i<GUIDE.length&&((GUIDE[i].skip&&GUIDE[i].skip())||(!GUIDE[i].next&&GUIDE[i].done())))i++;
+  W.tutI=i;if(i>=GUIDE.length){W.tutDone=1;return -1;}return i;
+}
+let tutEl=null,tutKey='';
 function renderGuide(){
-  const g=$('guide');let target=null;
-  if(W.tutOff||W.tutDone){g.hidden=true;}
+  $('guide').hidden=true;
+  const ov=$('tutor'),i=curStep();let target=null;
+  if(i<0||!$('modal').hidden||!$('startmenu').hidden||BOOTING){ov.hidden=true;}   // never cover dialogs, the Start menu or the boot screen
   else{
-    let last=-1;GUIDE.forEach((s,k)=>{if(s.done())last=k;});const i=GUIDE.findIndex((s,k)=>k>last&&!s.done());g.hidden=false;
-    if(i<0){setText($('gTitle'),'You’ve got the basics!');setText($('gStep'),'');
-      $('gText').innerHTML='Your stoker keeps the fire going now. The loop: <b>buy ore → smelt → forge → sell → upgrade &amp; hire</b>. New tabs and features appear as you unlock them. Reopen this guide from <b>Start → Show guide</b>.';$('gDoneRow').hidden=false;}
-    else{setText($('gTitle'),'Getting started');setText($('gStep'),`Step ${i+1} of ${GUIDE.length}`);const h=typeof GUIDE[i].t==='function'?GUIDE[i].t():GUIDE[i].t;if($('gText').dataset.h!==h){$('gText').dataset.h=h;$('gText').innerHTML=h;}$('gDoneRow').hidden=true;
-      const st=GUIDE[i],sel=st.pg&&S.page!==st.pg?tab(st.pg):st.el();target=sel?document.querySelector(sel):null;}
+    const st=GUIDE[i],pgv=typeof st.pg==='function'?st.pg():st.pg,needPg=pgv&&S.page!==pgv&&PAGES.some(x=>x.id===pgv&&avail(x));
+    const txt=needPg?`Open <b>${PAGES.find(x=>x.id===pgv).label}</b> on the taskbar.`:(typeof st.t==='function'?st.t():st.t);
+    let el=needPg?tab(pgv):(st.el?st.el():null);if(typeof el==='string')el=document.querySelector(el);if(!tutVis(el))el=null;
+    const free=el?(!needPg&&(typeof st.free==='function'?st.free():!!st.free)):!st.next;   // talking steps with no target dim the whole screen
+    ov.hidden=false;ov.classList.toggle('free',!!free);   // must be a real boolean, or toggle() flips it every frame
+    const tx=ov.querySelector('.ctext');if(tx.dataset.h!==txt){tx.dataset.h=txt;tx.innerHTML=txt;}
+    setText(ov.querySelector('.cstep'),`${i+1} / ${GUIDE.length}`);
+    const nb=ov.querySelector('.cnext');nb.hidden=!(st.next&&!needPg);setText(nb,st.last?'Have fun!':'Next');
+    const key=i+'|'+needPg;if(key!==tutKey){tutKey=key;if(el){const r=el.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)el.scrollIntoView({block:'center'});}}
+    placeTut(ov,el);
+    if(free&&el)target=el;
   }
-  // after the guide: point the way to the job board until it's been opened once
-  if(!target&&W.rev&&W.rev.jobs&&!W.rev.jobsSeen)target=document.querySelector(S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#gtabs .gtab[data-g="jobs"]');
+  if(!target&&i<0&&W.rev&&W.rev.jobs&&!W.rev.jobsSeen)target=document.querySelector(S.page!=='guild'?tab('guild'):S.gtop!=='smith'?'#gtop .gtab[data-t="smith"]':'#gtabs .gtab[data-g="jobs"]');
   if(target!==tutEl){if(tutEl)tutEl.classList.remove('tut');tutEl=target;if(tutEl)tutEl.classList.add('tut');}
 }
-$('gHide').onclick=()=>{W.tutOff=1;renderGuide();balloon('Reopen it any time from Start → Show guide.',false,'Guide hidden');};
-$('gOk').onclick=()=>{W.tutDone=1;renderGuide();};
-$('mGuide').onclick=()=>{W.tutOff=0;W.tutDone=0;closeStart();render();};
+function placeTut(ov,el){
+  const vw=innerWidth,vh=innerHeight,c=ov.querySelector('.clippy'),ring=ov.querySelector('.tring'),d={};ov.querySelectorAll('.tdim').forEach(x=>d[x.dataset.s]=x);
+  const px=(e,o)=>{for(const k in o)e.style[k]=Math.round(o[k])+'px';};
+  const cw=c.offsetWidth,ch=c.offsetHeight;
+  d.t.classList.toggle('full',!el);
+  if(!el){ring.hidden=true;px(d.t,{left:0,top:0,width:vw,height:vh});['b','l','r'].forEach(k=>px(d[k],{left:0,top:0,width:0,height:0}));
+    px(c,{left:(vw-cw)/2,top:(vh-ch)/2});return;}
+  const r=el.getBoundingClientRect(),p=6,L=Math.max(0,r.left-p),T=Math.max(0,r.top-p),Rr=Math.min(vw,r.right+p),B=Math.min(vh,r.bottom+p);
+  ring.hidden=false;px(ring,{left:L,top:T,width:Rr-L,height:B-T});
+  px(d.t,{left:0,top:0,width:vw,height:T});px(d.b,{left:0,top:B,width:vw,height:vh-B});px(d.l,{left:0,top:T,width:L,height:B-T});px(d.r,{left:Rr,top:T,width:vw-Rr,height:B-T});
+  let top,left=Math.min(Math.max(8,L),vw-cw-8);
+  if(B+10+ch<=vh-8)top=B+10;else if(T-10-ch>=8)top=T-10-ch;
+  else{top=Math.min(Math.max(8,T),vh-ch-8);left=Rr+10+cw<=vw-8?Rr+10:Math.max(8,L-10-cw);}
+  px(c,{left,top});
+}
+$('tutor').querySelector('.cnext').onclick=()=>{const i=curStep();if(i<0)return;if(GUIDE[i].last){W.tutDone=1;}else W.tutI=i+1;render();};
+$('tutor').querySelector('.cskip').onclick=()=>{W.tutOff=1;render();balloon('Reopen it any time from Start → Show guide.',false,'Tutorial skipped');};
+$('mGuide').onclick=()=>{W.tutOff=0;W.tutDone=0;W.tutI=null;closeStart();render();};
+addEventListener('resize',()=>{if(tutOn())renderGuide();});
 function go(p){
   if(!PAGES.some(x=>x.id===p&&avail(x)))p='back';
   if(S.page!==p)S.greet=Math.floor(Math.random()*99);
@@ -1475,7 +1564,7 @@ function go(p){
 function buildTabs(){
   const t=$('tabs');t.innerHTML='';
   PAGES.filter(avail).forEach(p=>{const b=document.createElement('button');b.dataset.p=p.id;b.setAttribute('role','tab');
-    b.innerHTML=`<svg viewBox="0 0 16 16">${p.icon}</svg><span></span>`;b.querySelector('span').textContent=p.label;b.title=`${p.label} (${p.key})`;
+    b.innerHTML=`<svg viewBox="0 0 16 16">${p.icon}</svg><span></span><i class="cnt" hidden></i>`;b.querySelector('span').textContent=p.label;b.title=`${p.label} (${p.key})`;
     b.onclick=()=>{go(p.id);if(p.id==='out')S.seen.reopen=0;};t.appendChild(b);});
   document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.p===S.page;b.classList.toggle('down',on);b.setAttribute('aria-selected',on)});
 }
@@ -1499,6 +1588,11 @@ function buildSell(){
     tr.innerHTML=`<td>${icon(R[k].icon,R[k].metal,'ico')}<span></span></td><td class="r st"></td><td class="r pr"></td><td class="r tr"></td><td class="r"><button data-s="1">Sell 1</button> <button data-s="all">All</button></td>`;
     tr.querySelector('span').textContent=R[k].name;tb.appendChild(tr);}
   tb.onclick=e=>{const b=e.target.closest('button');if(!b||S.page!=='front')return;const g=sell(b.closest('tr').dataset.k,b.dataset.s==='all'?Infinity:1);if(g)clink(true);render();};
+  const bs=$('bSellRows');bs.innerHTML='';
+  for(const k in R){const tr=document.createElement('tr');tr.dataset.k=k;
+    tr.innerHTML=`<td>${icon(R[k].icon,R[k].metal,'ico')}<span></span></td><td class="r st"></td><td class="r pr"></td><td class="r"><button data-s="1">Sell 1</button> <button data-s="all">All</button></td>`;
+    tr.querySelector('span').textContent=R[k].name;bs.appendChild(tr);}
+  bs.onclick=e=>{const b=e.target.closest('button');if(!b)return;const g=sell(b.closest('tr').dataset.k,b.dataset.s==='all'?Infinity:1);if(g)clink(true);render();};
 
   const ob=$('oreRows');ob.innerHTML='';
   for(const o in ORES){const tr=document.createElement('tr');tr.dataset.o=o;
@@ -1538,6 +1632,7 @@ const CARD_PERSON='<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1"
 const CARD_MAIL='<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" fill="#fff" stroke="#808080"/><rect x="6" y="11" width="28" height="19" fill="#ffffe0" stroke="#000"/><path d="M6 11l14 11 14-11" fill="none" stroke="#000"/></svg>';
 function makeCard(icon){const d=document.createElement('div');d.className='qc raised';
   d.innerHTML=`${icon}<div class="stack"><div class="row"><b class="grow who"></b><span class="qtime"></span></div><div class="req num"></div><div class="prog sunken"><i></i></div><div class="row num"><span class="grow have note"></span><button class="dl"></button></div></div>`;return d;}
+$('sideOrders').addEventListener('click',e=>{const b=e.target.closest('button.sdl');if(!b)return;if(b.dataset.c)shipContract(b.dataset.id);else deliverQuest(b.dataset.id);});
 $('walkins').addEventListener('click',e=>{const b=e.target.closest('button.dl');if(b)deliverQuest(b.closest('[data-id]').dataset.id);});
 $('contracts').addEventListener('click',e=>{const b=e.target.closest('button.dl');if(b)shipContract(b.closest('[data-id]').dataset.id);});
 $('mailRows').addEventListener('click',e=>{const tr=e.target.closest('tr[data-id]');if(!tr)return;S.mailSel=tr.dataset.id;const m=S.mail.find(x=>x.id===S.mailSel);if(m)m.read=true;render();});
@@ -1553,20 +1648,26 @@ function buildJobs(){
     d.innerHTML='<div class="row"><b class="grow t"></b><span class="cnt num note"></span></div><div class="note d"></div><div class="row"><button data-act="post"></button><span class="grow note st num"></span></div><div class="stack cands"></div>';
     box.appendChild(d);}
 }
-function stepper(t,k){return `<span class="step"><button data-d="-1" aria-label="Less">−</button><input type="number" min="0" max="999" inputmode="numeric" data-t="${t}" data-k="${k}" id="st-${t}-${k}"><button data-d="1" aria-label="More">+</button></span>`;}
-function buildOffice(){
-  const mr=$('minRows');mr.innerHTML='';
-  for(const k in R){const tr=document.createElement('tr');tr.dataset.k=k;
-    tr.innerHTML=`<td>${icon(R[k].icon,R[k].metal,'ico')}<span></span></td><td class="r sk"></td><td class="r od"></td><td class="r">${stepper('min',k)}</td><td class="ss"></td>`;tr.querySelector('span').textContent=R[k].name;mr.appendChild(tr);}
-  const om=$('oreMinRows');om.innerHTML='';
-  for(const o in ORES){const tr=document.createElement('tr');tr.dataset.o=o;
-    tr.innerHTML=`<td>${icon('ore',o,'ico')}${ORES[o].name} ore</td><td class="r pl"></td><td class="r">${stepper('omin',o)}</td><td class="r">${stepper('omax',o)}</td>`;om.appendChild(tr);}
-}
+function stepper(t,k,id){return `<span class="step"><button data-d="-1" aria-label="Less">−</button><input type="number" min="0" max="999" inputmode="numeric" data-t="${t}" data-k="${k}" id="st-${id}-${t}-${k}" aria-label="${t==='omax'?'Pay up to':'Keep at least'}"><button data-d="1" aria-label="More">+</button></span>`;}
+// Head Office: one section per smithy, stacked; edits apply to that smithy wherever you stand
+function inTown(id,fn){const s0=S;S=W.towns[id]||S;try{return fn();}finally{S=s0;}}
+function buildOffice(){$('oTowns').dataset.k='';}
+function officeBlock(id){const f=document.createElement('fieldset');f.dataset.town=id;f.className='otown';
+  f.innerHTML=`<legend></legend><div class="note testing nomgr" hidden></div><div class="stack mgr">
+    <div class="row"><div class="lcd num grow"><span class="mlcd"></span></div></div>
+    <label class="row"><input type="checkbox" class="mauto"> Let the manager choose what the anvil makes</label>
+    <div class="two">
+      <div class="list sunken"><table class="num"><thead><tr><th>Goods</th><th class="r">Stock</th><th class="r">Orders</th><th class="r">Keep at least</th><th>Status</th></tr></thead><tbody>${Object.keys(R).map(k=>`<tr data-k="${k}"><td>${icon(R[k].icon,R[k].metal,'ico')}${R[k].name}</td><td class="r sk"></td><td class="r od"></td><td class="r">${stepper('min',k,id)}</td><td class="ss"></td></tr>`).join('')}</tbody></table></div>
+      <div class="list sunken"><table class="num"><thead><tr><th>Ore</th><th class="r">Pile</th><th class="r">Keep at least</th><th class="r">Pay up to</th></tr></thead><tbody>${Object.keys(ORES).map(o=>`<tr data-o="${o}"><td>${icon('ore',o,'ico')}${ORES[o].name}</td><td class="r pl"></td><td class="r">${stepper('omin',o,id)}</td><td class="r">${stepper('omax',o,id)}</td></tr>`).join('')}</tbody></table></div>
+    </div></div>`;return f;}
 const stVal=(t,k)=>t==='min'?(S.mins[k]||0):t==='omin'?(S.oreMin[k]||0):(S.oreMax[k]??ORES[k].price);
-function stSet(t,k,v){v=Math.max(t==='omax'?1:0,Math.min(999,Math.round(+v||0)));if(t==='min')S.mins[k]=v;else if(t==='omin')S.oreMin[k]=v;else S.oreMax[k]=v;S.mgrT=1;render();}
-$('p-office').addEventListener('click',e=>{const b=e.target.closest('.step button');if(!b)return;const inp=b.parentNode.querySelector('input');stSet(inp.dataset.t,inp.dataset.k,stVal(inp.dataset.t,inp.dataset.k)+(+b.dataset.d)*(e.shiftKey?5:1));});
-$('p-office').addEventListener('change',e=>{const i=e.target;if(i.dataset&&i.dataset.t)stSet(i.dataset.t,i.dataset.k,i.value);});
-['mgrAuto','mgrAuto2'].forEach(id=>$(id).addEventListener('change',e=>{S.mgrAuto=e.target.checked;S.mgrT=1;log(S.mgrAuto?'Greta will choose what the anvil makes.':'You are choosing patterns yourself now.');render();}));
+function stSet0(t,k,v){v=Math.max(t==='omax'?1:0,Math.min(999,Math.round(+v||0)));if(t==='min')S.mins[k]=v;else if(t==='omin')S.oreMin[k]=v;else S.oreMax[k]=v;S.mgrT=1;}
+const townOf=el=>el.closest('[data-town]').dataset.town;
+$('p-office').addEventListener('click',e=>{const b=e.target.closest('.step button');if(!b)return;const inp=b.parentNode.querySelector('input');
+  inTown(townOf(b),()=>stSet0(inp.dataset.t,inp.dataset.k,stVal(inp.dataset.t,inp.dataset.k)+(+b.dataset.d)*(e.shiftKey?5:1)));render();});
+$('p-office').addEventListener('change',e=>{const i=e.target;if(!i.closest('[data-town]'))return;const id=townOf(i);
+  if(i.classList.contains('mauto')){W.towns[id].mgrAuto=i.checked;W.towns[id].mgrT=1;}else if(i.dataset.t)inTown(id,()=>stSet0(i.dataset.t,i.dataset.k,i.value));render();});
+['mgrAuto2'].forEach(id=>$(id).addEventListener('change',e=>{S.mgrAuto=e.target.checked;S.mgrT=1;log(S.mgrAuto?'Greta will choose what the anvil makes.':'You are choosing patterns yourself now.');render();}));
 $('gtabs').addEventListener('click',e=>{const b=e.target.closest('.gtab');if(!b)return;S.gtab=b.dataset.g;render();});
 $('jobs').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;const role=b.closest('[data-role]').dataset.role;
   if(b.dataset.act==='post')postJob(role);else hire(role,b.closest('.cand').dataset.id);});
@@ -1766,6 +1867,44 @@ function renderScene(){
 /* ---------------- render ---------------- */
 function goldRate(){const now=Date.now();while(recent.length&&now-recent[0][0]>60000)recent.shift();return recent.reduce((a,b)=>a+b[1],0);}
 function setText(el,t){if(el.textContent!==t)el.textContent=t;}
+function renderOffice(){
+  const ids=Object.keys(W.towns),many=ids.length>1;
+  $('oOverview').hidden=!many;setText($('oSub'),many?'all your smithies':TOWNS[W.cur].name);
+  if(many)renderOverview();
+  const box=$('oTowns'),order=[W.cur,...ids.filter(x=>x!==W.cur)],key=order.join(',');   // the town you're in comes first
+  if(box.dataset.k!==key){box.dataset.k=key;box.innerHTML='';order.forEach(id=>box.appendChild(officeBlock(id)));}
+  box.querySelectorAll('.otown').forEach(f=>inTown(f.dataset.town,()=>officeTown(f)));
+}
+function renderOverview(){
+  const tb=$('oRows'),ids=Object.keys(W.towns);
+  if(tb.dataset.k!==ids.join(',')){tb.dataset.k=ids.join(',');tb.innerHTML=ids.map(id=>`<tr data-t="${id}"><td><b>${TOWNS[id].name}</b><span class="note here"></span></td><td class="mg"></td><td class="an"></td><td class="r sh"></td><td class="r od"></td><td class="r ore"></td><td class="sf"></td><td class="r"><button data-act="go">Go</button></td></tr>`).join('');}
+  tb.querySelectorAll('tr').forEach(tr=>inTown(tr.dataset.t,()=>{
+    const mgr=!!S.up.manager,short=Object.keys(R).filter(unlocked).filter(k=>deficit(k)>0),q=S.quests.length+S.contracts.length,ready=S.quests.filter(x=>(S.stock[x.k]||0)>=x.qty).length;
+    setText(tr.querySelector('.here'),S.town===W.cur?' (you are here)':'');
+    setText(tr.querySelector('.mg'),mgr?(S.mgrAuto?'Auto':'Ore only'):'None');
+    setText(tr.querySelector('.an'),S.job?R[S.job.k].name:'idle');
+    const sh=tr.querySelector('.sh');setText(sh,short.length?short.map(k=>`${deficit(k)} ${R[k].name}`).join(', '):'—');sh.classList.toggle('bad',short.length>0);
+    setText(tr.querySelector('.od'),q?`${q}${ready?` (${ready} ready)`:''}`:'—');
+    setText(tr.querySelector('.ore'),Object.keys(ORES).filter(oreOpen).map(o=>`${fmt(S.pile[o])} ${ORES[o].name[0]}`).join(' · '));
+    const unpaid=S.staff.filter(w=>w.unpaid).length,sf=tr.querySelector('.sf');setText(sf,S.staff.length?`${S.staff.length}${unpaid?` · ${unpaid} unpaid!`:''}`:'none');sf.classList.toggle('bad',unpaid>0);
+    tr.querySelector('[data-act="go"]').disabled=S.town===W.cur;}));
+}
+$('oRows').addEventListener('click',e=>{const b=e.target.closest('button[data-act="go"]');if(b)travel(b.closest('tr').dataset.t);});
+function officeTown(f){
+  const mgr=!!lvl('manager'),q=c=>f.querySelector(c);
+  setText(q('legend'),TOWNS[S.town].name+(S.town===W.cur&&Object.keys(W.towns).length>1?' (you are here)':''));
+  q('.mgr').hidden=!mgr;q('.nomgr').hidden=mgr;
+  if(!mgr){setText(q('.nomgr'),`No manager in ${TOWNS[S.town].name} yet. Travel there and learn Hire Workshop Manager at the Smith Guild to run it from here.`);return;}
+  q('.mauto').checked=!!S.mgrAuto;
+  const short=Object.keys(R).filter(unlocked).filter(k=>deficit(k)>0).length;
+  setText(q('.mlcd'),S.mgrAuto?(short?`Making: ${R[S.recipe].name} · ${short} item${short>1?'s':''} short`:'All targets met'):'Manager: ore only');
+  f.querySelectorAll('tr[data-k]').forEach(tr=>{const k=tr.dataset.k,ok=unlocked(k);tr.hidden=!ok;if(!ok)return;
+    setText(tr.querySelector('.sk'),fmt(S.stock[k]||0));setText(tr.querySelector('.od'),String(reserved(k)));
+    const d=deficit(k),ss=tr.querySelector('.ss');ss.className='ss '+(d>0?'short':'ok');
+    setText(ss,d>0?((S.mgrAuto&&S.recipe===k)?`Making · short ${d}`:`Short ${d}`):(stVal('min',k)||reserved(k)?'OK':'—'));});
+  f.querySelectorAll('tr[data-o]').forEach(tr=>{const o=tr.dataset.o;tr.hidden=!oreOpen(o);setText(tr.querySelector('.pl'),fmt(S.pile[o]));});
+  f.querySelectorAll('.step input').forEach(i=>{if(document.activeElement!==i){const v=String(stVal(i.dataset.t,i.dataset.k));if(i.value!==v)i.value=v;}});
+}
 function render(){
   setText($('titleTxt'),`Smithy 97 — ${TOWNS[S.town].name}`);setText($('trayTown'),TOWNS[S.town].name);
   setText($('goldTxt'),fmt(S.gold)+' g');setText($('barGold'),fmt(S.gold)+' g');setText($('trayGold'),fmt(S.gold)+' g');setText($('rateTxt'),'+'+fmt(goldRate())+' g/min');
@@ -1796,7 +1935,7 @@ function render(){
   // anvil
   const k=S.job?S.job.k:S.recipe,r=R[k];
   if(S.job){const pct=Math.min(1,S.job.p/r.need);
-    setText($('jobTxt'),`${r.name}: ${Math.floor(S.job.p)} / ${r.need} strikes`);$('jobBar').style.width=pct*100+'%';
+    setText($('jobTxt'),`On the anvil: ${r.name}, ${Math.floor(S.job.p)} / ${r.need} strikes`+(S.job.k!==S.recipe?` · next: ${R[S.recipe].name}`:''));$('jobBar').style.width=pct*100+'%';
     $('bar').setAttribute('fill',pct<.33?'#ff9a1f':pct<.66?'#ffc04a':'#fff3a0');$('bar').setAttribute('width',70-pct*20);$('bar').setAttribute('x',78+pct*10);
   }else{const ok=S.ingots[r.metal]>=r.ing;setText($('jobTxt'),ok?`Ready: ${r.name}. Click the anvil.`:`Waiting for ${r.ing} ${ORES[r.metal].name.toLowerCase()} ingot${r.ing>1?'s':''}`);$('jobBar').style.width='0%';
     $('bar').setAttribute('fill',ok?'#ff9a1f':'#3a3a3a');$('bar').setAttribute('width',70);$('bar').setAttribute('x',78);}
@@ -1829,6 +1968,8 @@ function render(){
     row.hidden=!ok;if(!ok)return;setText(row.querySelector('.st'),fmt(n));setText(row.querySelector('.pr'),sellPrice(k)+' g');
     const d=S.demand[k]||1,l=S.demandLast[k]||1,t=row.querySelector('.tr'),h=d>l+.02?'<span class="up">↑</span>':d<l-.02?'<span class="dn">↓</span>':'–';if(t.innerHTML!==h)t.innerHTML=h;
     row.querySelectorAll('button').forEach(b=>b.disabled=!n);});
+  document.querySelectorAll('#bSellRows tr').forEach(row=>{const k=row.dataset.k,n=S.stock[k]||0;row.hidden=!unlocked(k)||(!n&&k!=='nails');if(row.hidden)return;
+    setText(row.querySelector('.st'),fmt(n));setText(row.querySelector('.pr'),sellPrice(k)+' g');row.querySelectorAll('button').forEach(b=>b.disabled=!n);});
 
   // market
   const lic=lvl('dig')>0;
@@ -1864,18 +2005,8 @@ function render(){
 
   if(lvl('map_barony'))renderMap();
   // office
-  $('mgrAutoRow').hidden=!lvl('manager');$('mgrAuto2').checked=!!S.mgrAuto;$('recipe').disabled=!!(lvl('manager')&&S.mgrAuto);
-  if(lvl('manager')){
-    $('mgrAuto').checked=!!S.mgrAuto;
-    const short=Object.keys(R).filter(unlocked).filter(k=>deficit(k)>0).length;
-    setText($('mgrLcd'),S.mgrAuto?(short?`Making: ${R[S.recipe].name} · ${short} item${short>1?'s':''} short`:'All targets met'):'Manager: ore only');
-    document.querySelectorAll('#minRows tr').forEach(tr=>{const k=tr.dataset.k,ok=unlocked(k);tr.hidden=!ok;if(!ok)return;
-      setText(tr.querySelector('.sk'),fmt(S.stock[k]||0));setText(tr.querySelector('.od'),String(reserved(k)));
-      const d=deficit(k),ss=tr.querySelector('.ss');ss.className='ss '+(d>0?'short':'ok');
-      setText(ss,d>0?((S.mgrAuto&&S.recipe===k)?`Making · short ${d}`:`Short ${d}`):(stVal('min',k)||reserved(k)?'OK':'—'));});
-    document.querySelectorAll('#oreMinRows tr').forEach(tr=>{const o=tr.dataset.o;tr.hidden=!oreOpen(o);setText(tr.querySelector('.pl'),fmt(S.pile[o]));});
-    document.querySelectorAll('#p-office .step input').forEach(i=>{if(document.activeElement!==i){const v=String(stVal(i.dataset.t,i.dataset.k));if(i.value!==v)i.value=v;}});
-  }
+  $('mgrAutoRow').hidden=!lvl('manager');$('mgrAuto2').checked=!!S.mgrAuto;$('recipe').disabled=!!(lvl('manager')&&S.mgrAuto);if($('recipe').value!==S.recipe)$('recipe').value=S.recipe;if($('oreSel').value!==F().set)$('oreSel').value=F().set;   // always show this town's pattern
+  if(S.page==='office')renderOffice();
   // guild ranks
   document.querySelectorAll('.rankbox').forEach(rb=>{const g=rb.dataset.g,gr=rk(g),k=RANKS[gr],nx=RANKS[gr+1],x=S.xp[g]||0,bd=rb.querySelector('.badge');
     if(bd.dataset.r!==String(gr)){bd.dataset.r=gr;bd.innerHTML=badgeSVG(gr);rb.querySelectorAll('.ladder span').forEach((sp,i)=>{sp.className=i<gr?'done':i===gr?'on':'';});}
@@ -1942,11 +2073,13 @@ function render(){
   setText($('contractTxt'),S.contracts.length?`${S.contracts.length}/${maxContracts()} contract slots used. Partial shipments count.`:`No active contracts. Accept offers in your Inbox (${S.contracts.length}/${maxContracts()} slots).`);
   const orders=S.quests.map(o=>({id:o.id,c:0,o})).concat(S.contracts.map(o=>({id:o.id,c:1,o})));
   syncList($('sideOrders'),orders,()=>{const d=document.createElement('div');d.className='ord';
-    d.innerHTML='<div class="row"><b class="grow who"></b><span class="qtime"></span></div><div class="row num"><span class="grow req"></span><span class="have"></span></div><div class="prog sunken thin"><i></i></div>';return d;},
+    d.innerHTML='<div class="row"><b class="grow who"></b><span class="qtime"></span></div><div class="row num"><span class="grow req"></span><span class="have"></span></div><div class="prog sunken thin"><i></i></div><div class="row"><span class="grow"></span><button class="sdl" hidden>Deliver</button></div>';return d;},
     (d,x)=>{const o=x.o,have=S.stock[o.k]||0;setText(d.querySelector('.qtime'),mmss(o.left));setText(d.querySelector('.req'),`${o.qty} × ${R[o.k].name}`);
+      const sb=d.querySelector('.sdl');sb.dataset.id=o.id;sb.dataset.c=x.c?1:'';sb.hidden=false;
+      if(!x.c){setText(sb,'Deliver');sb.disabled=have<o.qty;}else{const n=Math.min(have,o.qty-o.done);setText(sb,n?`Ship ${n}`:'Ship');sb.disabled=!n;}
       if(!x.c){setText(d.querySelector('.who'),o.who);setText(d.querySelector('.have'),`${Math.min(have,o.qty)}/${o.qty}`);d.querySelector('.prog i').style.width=Math.min(100,have/o.qty*100)+'%';}
       else{setText(d.querySelector('.who'),'✉ '+o.org);setText(d.querySelector('.have'),`${o.done}/${o.qty} sent`);d.querySelector('.prog i').style.width=(o.done/o.qty*100)+'%';}});
-  setText($('sideEmpty'),orders.length?(S.page==='front'?'Deliver from the counter above.':'Deliver at Front of Smithy.'):'No customers right now. '+nextIn);
+  setText($('sideEmpty'),orders.length?'':'No customers right now. '+nextIn);
 
   // inbox
   const unread=S.mail.filter(m=>!m.read).length;
@@ -1979,13 +2112,16 @@ function render(){
   const alerts={
     back:(S.furn.some(f=>f.ore>=1&&f.heat<ORES[f.type].heat)&&!stokerTarget())||(!S.job&&S.ingots[r0.metal]>=r0.ing&&!apprRate())||(S.furn.some(f=>S.pile[f.set]>=1&&f.ore===0)&&!lvl('hopper')),
     front:S.quests.some(q=>(S.stock[q.k]||0)>=q.qty)||S.contracts.some(c=>(S.stock[c.k]||0)>0),
-    mail:unread>0,
+    mail:false,
     map:Object.values(W.towns).some(t=>t!==S&&(t.staff.some(w=>w.unpaid)||t.quests.some(q=>(t.stock[q.k]||0)>=q.qty)))||W.caravans.some(c=>c.left<=0),
     market:Object.keys(ORES).some(o=>oreOpen(o)&&S.op[o]===oreRange(o)[0]&&S.gold>=S.op[o])||(S.made===0&&S.pile.copper===0&&S.furn.every(f=>!f.ore)&&S.ingots.copper===0&&!S.job),
     out:!!S.seen.reopen,
-    guild:!!(W.rev&&W.rev.jobs&&!W.rev.jobsSeen)||Object.values(S.posts).some(p=>p.apps)||S.staff.some(w=>w.unpaid)||T.some(n=>!n.soon&&!nodeMaxed(n)&&nodeOpen(n)&&S.gold>=nodeCost(n)&&(n.once||!lvl(n.id)))
+    guild:S.staff.some(w=>w.unpaid)
   };
+  for(const k in alerts)if(k!=='front')alerts[k]=false;   // only the shop lights up, and it never flashes
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('alert',!!alerts[b.dataset.p]&&b.dataset.p!==S.page));
+  const counts={mail:unread,guild:T.filter(n=>!n.soon&&!nodeMaxed(n)&&nodeOpen(n)&&S.gold>=nodeCost(n)&&(n.once||!lvl(n.id))).length+Object.values(S.posts).filter(p=>p.apps).length};
+  document.querySelectorAll('#tabs button .cnt').forEach(c=>{const n=counts[c.parentNode.dataset.p]||0;c.hidden=!n;setText(c,`(${n})`);});
   updateReveal();applyReveal();renderGuide();
   renderScene();
 }
@@ -2005,7 +2141,7 @@ function dialog(title,html,icon,acts){
 const soundLabel=()=>$('mSound').innerHTML=(S.sound?'🔊':'🔇')+'&nbsp; Sound: '+(S.sound?'on':'off');
 $('mSave').onclick=()=>{closeStart();save(true)};
 $('mSound').onclick=()=>{S.sound=!S.sound;soundLabel()};
-$('mAbout').onclick=()=>{closeStart();dialog('How to play',`<b>Smithy 97</b> v0.5<br>1. <b>Back of Smithy</b>: click the anvil to hammer bars into goods. Out of bars? Buy ore at the <b>Market</b>, put it in the furnace and pump the bellows past the marker. Hire a stoker to keep the fire going.<br>2. <b>Market</b>: buy ore, and later sell spare ore and bars.<br>3. <b>Front of Smithy</b>: your shop. Sell goods, serve customers, ship email contracts and run newspaper ads.<br>4. <b>Guilds</b>: the Smith Guild (tech tree, job board), the Merchants Guild (shop promotion, trade discounts) and the Miners Guild (licenses and this town's mine). Each has its own rank from G to SSS.<br>5. <b>Outskirts</b>: dig ore (illegally, until you have a license).<br><br>Music: “Shop” by xDeviruchi (♪ button in the taskbar).<br><br>Keys: 1–8 change page, B pumps, Space strikes. Blinking tabs need you.`,ICON_INFO,[['OK']])};
+$('mAbout').onclick=()=>{closeStart();dialog('How to play',`<b>Smithy 97</b> v0.5<br>1. <b>Smithy</b>: click the anvil to hammer bars into goods. Out of bars? Buy ore at the <b>Market</b>, put it in the furnace and pump the bellows past the marker. Hire a stoker to keep the fire going.<br>2. <b>Market</b>: buy ore, and later sell spare ore and bars.<br>3. <b>Front of Smithy</b> (Merchants Guild: Open a Storefront): your shop. Sell goods, serve customers, ship email contracts and run newspaper ads.<br>4. <b>Guilds</b>: the Smith Guild (tech tree, job board), the Merchants Guild (shop promotion, trade discounts) and the Miners Guild (licenses and this town's mine). Each has its own rank from G to SSS.<br>5. <b>Outskirts</b>: dig ore (illegally, until you have a license).<br><br>Music: “Shop” by xDeviruchi (♪ button in the taskbar).<br><br>Keys: 1–8 change page, B pumps, Space strikes. Blinking tabs need you.`,ICON_INFO,[['OK']])};
 $('mReset').onclick=()=>{closeStart();dialog('Format C:',`All gold, stock and guild knowledge will be erased. This cannot be undone.<br><br>Format drive C: and start over?`,ICON_WARN,[['No'],['Yes, format',()=>{freshWorld();S=W.towns.oakridge;try{localStorage.removeItem(KEY)}catch(e){}buildTabs();buildSelects();intro();go('back')}]])};
 
 /* ---------------- save / load ---------------- */
@@ -2202,7 +2338,10 @@ function start(data){
     if(gap>18*3600*1000)track('return/next-day','Came back another day');}
   buildTabs();buildSelects();buildSell();buildTree();buildJobs();buildOffice();
   if(!had)intro();else renderLog();
-  soundLabel();bootLabel();logLabel();if(!W.tutDone&&(GUIDE[GUIDE.length-1].done()||W.earned>500))W.tutDone=1;go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
+  soundLabel();bootLabel();logLabel();if(!W.tutDone&&(staffOf('stoker').length>0&&(S.seen.swung||0)>=4||W.earned>500))W.tutDone=1;
+  // saves from before the storefront was an unlock keep their shop
+  Object.values(W.towns).forEach(t=>{if(['ads','sign','crier','email','clerk','seal'].some(k=>t.up[k]))t.up.shop=1;});
+  if(had)Object.values(W.towns).forEach(t=>{if(!t.seen.shopMig){t.seen.shopMig=1;if(t.made>0||t.earned>0)t.up.shop=1;}});go(S.page||'back');fit();clock();setInterval(clock,15000);requestAnimationFrame(tick);
   renderPlayer();
   if(!(data&&data.state)&&!W.noBoot)boot();else track('step/03-in-game','Reached the game');
 }
